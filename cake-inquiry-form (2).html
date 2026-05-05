@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
+<link href="https://fonts.cdnfonts.com/css/recoleta" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf2c3;
+    --cream-dark: #f5e89a;
+    --brown: #5c3317;
+    --brown-light: #8b5a2b;
+    --brown-pale: #c4956a;
+    --error-bg: #fff3cd;
+    --error-border: #e8a317;
+    --error-text: #7a4a00;
+    --closed-bg: #fde8e8;
+    --closed-border: #e87c7c;
+    --closed-text: #7a0000;
+    --white: #ffffff;
+    --text: #3a2010;
+    --radius: 8px;
+    --shadow: 0 2px 12px rgba(92,51,23,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+
+  .form-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .form-header h1 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 2rem;
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .form-header p {
+    font-size: 0.97rem;
+    color: var(--brown-light);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* --- Date error banners --- */
+  .date-alert {
+    display: none;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 8px;
+    font-size: 0.93rem;
+    line-height: 1.6;
+    animation: slideDown 0.25s ease;
+  }
+
+  .date-alert.show { display: block; }
+
+  .date-alert.too-soon {
+    background: var(--error-bg);
+    border: 1.5px solid var(--error-border);
+    color: var(--error-text);
+  }
+
+  .date-alert.closed-day {
+    background: var(--closed-bg);
+    border: 1.5px solid var(--closed-border);
+    color: var(--closed-text);
+  }
+
+  .date-alert strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+
+  .date-alert a {
+    color: var(--brown);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- Card sections --- */
+  .card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(92,51,23,0.08);
+  }
+
+  .card-title {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.05rem;
+    color: var(--brown);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  /* --- Fields --- */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  label .req { color: #c0392b; margin-left: 2px; }
+  label .hint { font-weight: 400; text-transform: none; color: var(--brown-pale); font-size: 0.83rem; letter-spacing: 0; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e0d4b8;
+    border-radius: var(--radius);
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: #fffdf5;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brown-pale);
+    box-shadow: 0 0 0 3px rgba(196,149,106,0.18);
+  }
+
+  /* Date field highlight states */
+  input[type="date"].invalid {
+    border-color: var(--error-border);
+    background: #fffbf0;
+  }
+  input[type="date"].closed {
+    border-color: var(--closed-border);
+    background: #fff8f8;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c3317' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  /* --- Radio & Checkbox groups --- */
+  .radio-group, .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .radio-group label,
+  .check-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.93rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text);
+    cursor: pointer;
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    border: 1.5px solid #e0d4b8;
+    background: #fffdf5;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .radio-group label:hover,
+  .check-group label:hover {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .radio-group input[type="radio"],
+  .check-group input[type="checkbox"] {
+    width: 17px; height: 17px;
+    accent-color: var(--brown);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .radio-group label.selected,
+  .check-group label.checked {
+    border-color: var(--brown-pale);
+    background: #fdf3d8;
+  }
+
+  /* Two-column layout for some checkbox groups */
+  .check-group.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) { .check-group.two-col { grid-template-columns: 1fr; } }
+
+  /* --- Blocked section overlay --- */
+  .section-blocked {
+    opacity: 0.38;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.3s;
+  }
+
+  /* --- Submit button --- */
+  .submit-wrap { text-align: center; margin-top: 10px; }
+
+  button[type="submit"] {
+    background: var(--brown);
+    color: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.1rem;
+    padding: 15px 48px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    box-shadow: 0 4px 18px rgba(92,51,23,0.25);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+
+  button[type="submit"]:hover:not(:disabled) {
+    background: var(--brown-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(92,51,23,0.3);
+  }
+
+  button[type="submit"]:disabled {
+    background: #c4b49a;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .submit-note {
+    font-size: 0.82rem;
+    color: var(--brown-pale);
+    margin-top: 12px;
+  }
+
+  /* --- Success state --- */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .success-screen.show { display: block; }
+  .form-body.hidden { display: none; }
+
+  .success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+
+  .success-screen h2 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.8rem;
+    color: var(--brown);
+    margin-bottom: 12px;
+  }
+
+  .success-screen p {
+    color: var(--brown-light);
+    font-size: 0.97rem;
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* --- Preamble sections --- */
+  .preamble { margin-bottom: 36px; }
+
+  .preamble-intro {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .preamble-intro h1 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 2rem;
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .step {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid rgba(92,51,23,0.08);
+    box-shadow: var(--shadow);
+    padding: 18px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    background: var(--brown);
+    color: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body h3 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+
+  .step-body p {
+    font-size: 0.88rem;
+    color: var(--brown-light);
+    line-height: 1.6;
+  }
+
+  .step-body a { color: var(--brown); font-weight: 700; }
+
+  .info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 520px) { .info-cards { grid-template-columns: 1fr; } }
+
+  .info-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid rgba(92,51,23,0.08);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+  }
+
+  .info-card .info-icon { font-size: 1.4rem; margin-bottom: 6px; }
+
+  .info-card h3 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brown-pale);
+    margin-bottom: 2px;
+  }
+
+  .info-card h4 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1rem;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+
+  .info-card p {
+    font-size: 0.85rem;
+    color: var(--brown-light);
+    line-height: 1.6;
+  }
+
+  .info-card a { color: var(--brown); font-weight: 700; }
+
+  .form-intro-box {
+    background: var(--brown);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .form-intro-box h2 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .form-intro-box p {
+    font-size: 0.9rem;
+    color: #f5e4c0;
+    line-height: 1.7;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+  /* --- Photo upload --- */
+  .upload-zone {
+    border: 2px dashed #d4c4a0;
+    border-radius: 10px;
+    background: #fffdf5;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .upload-zone:hover,
+  .upload-zone.drag-over {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .upload-zone.drag-over {
+    border-color: var(--brown);
+    background: #fdf3d8;
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+
+  .upload-zone p {
+    font-size: 0.93rem;
+    color: var(--brown-light);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .upload-zone .upload-cta {
+    font-weight: 700;
+    color: var(--brown);
+    text-decoration: underline;
+  }
+
+  .upload-zone .upload-sub {
+    font-size: 0.8rem;
+    color: var(--brown-pale);
+    margin-top: 4px;
+  }
+
+  /* Preview grid */
+  .photo-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .photo-previews:empty { display: none; }
+
+  .preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: #f0e8d0;
+    box-shadow: 0 2px 8px rgba(92,51,23,0.12);
+    animation: popIn 0.2s ease;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-item .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(92,51,23,0.85);
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.15s;
+    z-index: 2;
+  }
+
+  .preview-item .remove-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+  }
+
+  .preview-item .file-name {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(92,51,23,0.65);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 3px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .photo-count {
+    font-size: 0.82rem;
+    color: var(--brown-pale);
+    margin-top: 8px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="form-wrap">
+
+  <!-- Success screen (hidden until submit) -->
+  <div class="success-screen" id="successScreen">
+    <h2>We got it — thank you!</h2>
+    <p>Your inquiry is in our inbox. We'll be in touch within 72 hours. We can't wait to bake something beautiful for you!</p>
+  </div>
+
+  <div class="form-body" id="formBody">
+
+    <!-- Date alert banners -->
+    <div class="date-alert too-soon" id="alertTooSoon">
+      <strong>We need at least one week's notice for custom cakes!</strong>
+      Unfortunately we can't take custom orders with less than 7 days notice — but don't worry, we've got you covered!
+      Our <a href="https://www.cakeforbreakfast.ca/s/shop" target="_blank">Online Cake Shop</a> has delicious options available with just 2 days notice.
+    </div>
+
+    <div class="date-alert closed-day" id="alertClosedDay">
+      <strong><span id="alertClosedDayText"></span></strong>
+    </div>
+
+    <form id="cakeForm" novalidate>
+
+      <!-- CONTACT -->
+      <div class="card">
+        <div class="card-title">Your Details</div>
+
+        <div class="field">
+          <label>Full name (first and last!) <span class="req">*</span></label>
+          <input type="text" name="fullName" required placeholder="Jane Smith" autocomplete="name">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" name="email" required placeholder="jane@email.com" autocomplete="email">
+          </div>
+          <div class="field">
+            <label>Phone number <span class="req">*</span></label>
+            <input type="tel" name="phone" required placeholder="250-555-0100" autocomplete="tel">
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT DATE — always visible, validation fires here -->
+      <div class="card">
+        <div class="card-title">Event Date &amp; Time</div>
+
+        <div class="field">
+          <label>Event date <span class="req">*</span></label>
+          <input type="date" name="eventDate" id="eventDate" required>
+        </div>
+
+        <!-- Rest of this card is blocked when date is invalid -->
+        <div id="dateGatedFields">
+          <div class="field">
+            <label>Event time <span class="req">*</span> <span class="hint">Approximate is fine</span></label>
+            <input type="time" name="eventTime" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAKE DETAILS — blocked when date invalid -->
+      <div id="mainForm">
+
+        <div class="card">
+          <div class="card-title">About Your Cake</div>
+
+          <div class="field">
+            <label>What is this cake for? <span class="req">*</span></label>
+            <input type="text" name="cakeFor" required placeholder="e.g. Wedding, Birthday, Anniversary..." autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Number of guests / portions <span class="req">*</span></label>
+            <input type="number" name="portions" required placeholder="e.g. 50" min="1" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Flavour <span class="req">*</span></label>
+            <div class="radio-group" id="flavourGroup">
+              <label><input type="radio" name="flavour" value="Chocolate Lover's" required> Chocolate Lover's</label>
+              <label><input type="radio" name="flavour" value="Classic Confetti Crunch"> Classic Confetti Crunch</label>
+              <label><input type="radio" name="flavour" value="Carrot Caramel Praline"> Carrot Caramel Praline</label>
+              <label><input type="radio" name="flavour" value="Pistachio, Matcha, Mixed Berry"> Pistachio, Matcha, Mixed Berry</label>
+              <label><input type="radio" name="flavour" value="Red Velvet Raspberry"> Red Velvet Raspberry</label>
+              <label><input type="radio" name="flavour" value="Vanilla Bean & Salted Caramel"> Vanilla Bean &amp; Salted Caramel</label>
+              <label><input type="radio" name="flavour" value="Brown Butter Pecan"> Brown Butter Pecan</label>
+              <label><input type="radio" name="flavour" value="Blueberry & Lemon"> Blueberry &amp; Lemon</label>
+              <label><input type="radio" name="flavour" value="Strawberry Milkshake"> Strawberry Milkshake</label>
+              <label><input type="radio" name="flavour" value="Custom (described below)"> I've got a custom flavour in mind... (describe it below!)</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Any allergies or dietary restrictions? <span class="req">*</span></label>
+            <input type="text" name="allergies" required placeholder="e.g. gluten-free, nut allergy, vegan..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cake Style &amp; Size</div>
+
+          <div class="field">
+            <label>Preferred cake size <span class="req">*</span></label>
+            <select name="cakeSize" required>
+              <option value="" disabled selected>Preferred cake size *</option>
+              <option>1 Tier</option>
+              <option>2 Tiers</option>
+              <option>3 Tiers</option>
+              <option>Something bigger</option>
+              <option>Cupcakes</option>
+              <option>Not sure — help me!</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>What do you have in mind? <span class="req">*</span></label>
+            <div class="check-group two-col" id="inMindGroup">
+              <label><input type="checkbox" name="inMind" value="Enough cake for all my guests"> Enough cake for all my guests</label>
+              <label><input type="checkbox" name="inMind" value="Smaller cutting cake"> Smaller cutting cake</label>
+              <label><input type="checkbox" name="inMind" value="Sheet cake"> Sheet cake</label>
+              <label><input type="checkbox" name="inMind" value="Cupcakes"> Cupcakes</label>
+              <label><input type="checkbox" name="inMind" value="Table Desserts"> Table Desserts</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>How would you describe yourself? <span class="req">*</span></label>
+            <select name="describeYourself" required>
+              <option value="" disabled selected>How would you describe yourself? *</option>
+              <option>I'd be happy to give you free reign on design after explaining the feel of my event!</option>
+              <option>I don't really know what I'm after, suggestions and advice welcome!</option>
+              <option>I have a fair idea of the design I'm after, but would love some design advice.</option>
+              <option>I know exactly what design I'm after and I have pictures to show you!</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Tell us a little bit about what you're looking for... <span class="hint">(aesthetic, colour, garnishes, etc.)</span></label>
+            <textarea name="aesthetic" placeholder="Dreamy buttercream, dried flowers, sage green tones..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Inspiration photos <span class="hint">Up to 6 images — drag &amp; drop or click to browse</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="photoInput" accept="image/*" multiple>
+              <p><span class="upload-cta">Click to upload</span> or drag &amp; drop your inspo photos here</p>
+              <p class="upload-sub">JPG, PNG, HEIC, WEBP · Max 10MB each · Up to 6 photos</p>
+            </div>
+            <div class="photo-previews" id="photoPreviews"></div>
+            <div class="photo-count" id="photoCount"></div>
+          </div>
+
+          <div class="field">
+            <label>Anything else you'd like to ask or tell us?</label>
+            <textarea name="anythingElse" placeholder="Go for it!"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">The Extras</div>
+
+          <div class="field">
+            <label>Interested in any extra fun cake garnishes? <span class="req">*</span></label>
+            <div class="check-group" id="garnishGroup">
+              <label><input type="checkbox" name="garnishes" value="Flowers"> Flowers (prices vary)</label>
+              <label><input type="checkbox" name="garnishes" value="Birthday Candles"> Birthday Candles (3 for $3)</label>
+              <label><input type="checkbox" name="garnishes" value="Birch Bar + Co Cake Topper"> Birch Bar + Co Cake Topper (prices vary, we can chat!)</label>
+              <label><input type="checkbox" name="garnishes" value="None"> None of the above</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Interested in pricing and details on other desserts to go with your cake? <span class="req">*</span></label>
+            <div class="radio-group" id="otherDessertsGroup">
+              <label><input type="radio" name="otherDesserts" value="Yes please!" required> Yes please!</label>
+              <label><input type="radio" name="otherDesserts" value="Just the cake thanks"> Just the cake thanks :)</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Interested in purchasing a cake stand?</label>
+            <div class="radio-group" id="cakeStandGroup">
+              <label><input type="radio" name="cakeStand" value="Yes, send me options!"> Yes, send me options!</label>
+              <label><input type="radio" name="cakeStand" value="No thanks"> No thanks</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pickup &amp; Delivery</div>
+
+          <div class="field">
+            <label>How would you like to get your cake? <span class="req">*</span></label>
+            <div class="radio-group" id="pickupGroup">
+              <label><input type="radio" name="pickup" value="Pickup" required> I can come pick it up</label>
+              <label><input type="radio" name="pickup" value="Delivery"> I would like a delivery quote (please add the venue address below!)</label>
+            </div>
+          </div>
+
+          <div class="field" id="deliveryAddressField" style="display:none">
+            <label>Address for delivery quote</label>
+            <input type="text" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="street-address">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">One Last Thing!</div>
+          <div class="field">
+            <label>How did you hear about us? <span class="req">*</span></label>
+            <div class="check-group two-col" id="heardGroup">
+              <label><input type="checkbox" name="heardAbout" value="Instagram"> Instagram</label>
+              <label><input type="checkbox" name="heardAbout" value="Facebook"> Facebook</label>
+              <label><input type="checkbox" name="heardAbout" value="Friend / Family"> Friend / Family</label>
+              <label><input type="checkbox" name="heardAbout" value="Google"> Google</label>
+              <label><input type="checkbox" name="heardAbout" value="Saw your little truck!"> Saw your little truck!</label>
+              <label><input type="checkbox" name="heardAbout" value="Other"> Other</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="submit" id="submitBtn">Send My Inquiry</button>
+          <p class="submit-note">We'll be in touch within 72 hours!</p>
+        </div>
+
+      </div><!-- /mainForm -->
+    </form>
+  </div><!-- /formBody -->
+</div><!-- /form-wrap -->
+
+<script>
+  const GOOGLE_FORM_ACTION = 'YOUR_GOOGLE_FORM_ACTION_URL_HERE';
+  // Replace above with your Google Form POST URL (see instructions in the guide)
+
+  const eventDateInput = document.getElementById('eventDate');
+  const alertTooSoon   = document.getElementById('alertTooSoon');
+  const alertClosedDay = document.getElementById('alertClosedDay');
+  const mainForm       = document.getElementById('mainForm');
+  const dateGated      = document.getElementById('dateGatedFields');
+  const submitBtn      = document.getElementById('submitBtn');
+
+  // Days closed for pickup: 0=Sun, 1=Mon, 2=Tue
+  const CLOSED_DAYS = [0, 1, 2];
+  const MIN_DAYS_NOTICE = 7;
+
+  // Set min date on the calendar to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  eventDateInput.setAttribute('min', todayStr);
+
+  function getDateState(dateStr) {
+    if (!dateStr) return 'empty';
+
+    // Parse as local date (avoid timezone shift)
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const selected = new Date(y, m - 1, d);
+    const today    = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
+    const dow = selected.getDay();
+
+    if (diffDays < MIN_DAYS_NOTICE) return 'too-soon';
+    if (CLOSED_DAYS.includes(dow)) return 'closed-day';
+    return 'valid';
+  }
+
+  function applyDateState(state) {
+    // Reset
+    eventDateInput.classList.remove('invalid', 'closed');
+    alertTooSoon.classList.remove('show');
+    alertClosedDay.classList.remove('show');
+    mainForm.classList.remove('section-blocked');
+    dateGated.classList.remove('section-blocked');
+    submitBtn.disabled = false;
+
+    if (state === 'empty') {
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      return;
+    }
+
+    if (state === 'too-soon') {
+      eventDateInput.classList.add('invalid');
+      alertTooSoon.classList.add('show');
+      alertClosedDay.classList.remove('show');
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      // Smooth scroll to alert
+      alertTooSoon.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    if (state === 'closed-day') {
+      const [y, m, d] = eventDateInput.value.split('-').map(Number);
+      const dow = new Date(y, m - 1, d).getDay();
+      const saturdayNudge = dow === 0 || dow === 1; // Sun or Mon only
+
+      const msg = saturdayNudge
+        ? 'We\'re closed for pickup on Sundays and Mondays. Did you know — many of our customers pick up their cakes on Saturday and absolutely rave about them! Try selecting a Wednesday, Thursday, Friday, or Saturday instead.'
+        : 'We\'re closed for pickup on Tuesdays. Please choose a Wednesday, Thursday, Friday, or Saturday instead.';
+
+      document.getElementById('alertClosedDayText').textContent = msg;
+      eventDateInput.classList.add('closed');
+      alertClosedDay.classList.add('show');
+      alertTooSoon.classList.remove('show');
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      alertClosedDay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Valid — all good
+  }
+
+  // Initialise as blocked (no date chosen yet)
+  applyDateState('empty');
+
+  eventDateInput.addEventListener('change', function () {
+    applyDateState(getDateState(this.value));
+  });
+
+  // --- Radio / checkbox styling ---
+  document.querySelectorAll('.radio-group input[type="radio"]').forEach(input => {
+    input.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.check-group input[type="checkbox"]').forEach(input => {
+    input.addEventListener('change', function () {
+      this.closest('label').classList.toggle('checked', this.checked);
+    });
+  });
+
+  // --- Show/hide delivery address ---
+  document.querySelectorAll('input[name="pickup"]').forEach(r => {
+    r.addEventListener('change', function () {
+      document.getElementById('deliveryAddressField').style.display =
+        this.value === 'Delivery' ? 'block' : 'none';
+    });
+  });
+
+  // --- Photo upload ---
+  const MAX_PHOTOS = 6;
+  const MAX_SIZE_MB = 10;
+  let uploadedFiles = []; // array of File objects
+
+  const uploadZone    = document.getElementById('uploadZone');
+  const photoInput    = document.getElementById('photoInput');
+  const photoPreviews = document.getElementById('photoPreviews');
+  const photoCount    = document.getElementById('photoCount');
+
+  function updatePhotoCount() {
+    if (uploadedFiles.length === 0) {
+      photoCount.textContent = '';
+    } else {
+      photoCount.textContent = `${uploadedFiles.length} / ${MAX_PHOTOS} photo${uploadedFiles.length !== 1 ? 's' : ''} added`;
+    }
+    // Hide drop zone if at max
+    uploadZone.style.display = uploadedFiles.length >= MAX_PHOTOS ? 'none' : '';
+  }
+
+  function addFiles(files) {
+    for (const file of files) {
+      if (uploadedFiles.length >= MAX_PHOTOS) {
+        alert(`You can upload a maximum of ${MAX_PHOTOS} photos.`);
+        break;
+      }
+      if (!file.type.startsWith('image/')) {
+        alert(`"${file.name}" is not an image file and was skipped.`);
+        continue;
+      }
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        alert(`"${file.name}" is larger than ${MAX_SIZE_MB}MB and was skipped.`);
+        continue;
+      }
+      // Avoid duplicates by name+size
+      const isDupe = uploadedFiles.some(f => f.name === file.name && f.size === file.size);
+      if (isDupe) continue;
+
+      uploadedFiles.push(file);
+      renderPreview(file, uploadedFiles.length - 1);
+    }
+    updatePhotoCount();
+  }
+
+  function renderPreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      item.dataset.index = index;
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+
+      const name = document.createElement('div');
+      name.className = 'file-name';
+      name.textContent = file.name;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '✕';
+      removeBtn.title = 'Remove photo';
+      removeBtn.addEventListener('click', () => removePhoto(file, item));
+
+      item.appendChild(img);
+      item.appendChild(name);
+      item.appendChild(removeBtn);
+      photoPreviews.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto(file, itemEl) {
+    uploadedFiles = uploadedFiles.filter(f => f !== file);
+    itemEl.style.animation = 'none';
+    itemEl.style.opacity = '0';
+    itemEl.style.transform = 'scale(0.85)';
+    itemEl.style.transition = 'opacity 0.18s, transform 0.18s';
+    setTimeout(() => itemEl.remove(), 180);
+    updatePhotoCount();
+  }
+
+  // Click to browse
+  photoInput.addEventListener('change', function() {
+    addFiles(Array.from(this.files));
+    this.value = ''; // reset so same file can be re-added after removal
+  });
+
+  // Drag and drop
+  uploadZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+  });
+
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('drag-over');
+  });
+
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+
+  // ---- SUBMIT → Apps Script Web App ----
+  // Paste your deployed Web App URL here after following the setup guide
+  const SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
+
+  document.getElementById('cakeForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Validation
+    const required = this.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(field => {
+      if (field.type === 'radio') {
+        const group = document.querySelectorAll(`input[name="${field.name}"]`);
+        if (![...group].some(r => r.checked)) {
+          valid = false;
+          field.closest('.radio-group').style.outline = '2px solid #e87c7c';
+        }
+      } else if (!field.value.trim()) {
+        valid = false;
+        field.style.borderColor = '#e87c7c';
+        field.addEventListener('input', () => field.style.borderColor = '', { once: true });
+      }
+    });
+
+    if (!valid) {
+      alert('Please fill in all required fields before submitting.');
+      return;
+    }
+
+    // Show sending state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    const data = new FormData(this);
+
+    // Convert each photo to base64 and append to form data
+    // Apps Script receives: photo_1_data (base64), photo_1_type, photo_1_name
+    await Promise.all(uploadedFiles.map((file, i) => new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        data.append(`photo_${i+1}_data`, ev.target.result); // includes data:image/...;base64, prefix
+        data.append(`photo_${i+1}_type`, file.type);
+        data.append(`photo_${i+1}_name`, file.name);
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    })));
+
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', body: data, mode: 'no-cors' });
+    } catch (err) {
+      // no-cors always triggers a TypeError on the response — submission still goes through
+      console.log('Submitted:', err.message);
+    }
+
+    // Show success
+    document.getElementById('formBody').classList.add('hidden');
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
