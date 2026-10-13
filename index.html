@@ -24,6 +24,8 @@
     --text: #3a2010;
     --radius: 8px;
     --shadow: 0 2px 12px rgba(92,51,23,0.10);
+    --toast-bg: #5c3317;
+    --toast-fg: #fdf2c3;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,7 +136,7 @@
   }
 
   label .req { color: #c0392b; margin-left: 2px; }
-  label .hint { font-weight: 400; text-transform: none; color: var(--brown-pale); font-size: 0.83rem; letter-spacing: 0; }
+  label .hint { font-weight: 400; text-transform: none; color: var(--brown-pale); font-size: 0.83rem; letter-spacing: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
 
   input[type="text"],
   input[type="email"],
@@ -182,6 +184,12 @@
     padding-right: 36px;
   }
 
+  select:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: #f5ecd5;
+  }
+
   textarea { resize: vertical; min-height: 90px; }
 
   /* --- Radio & Checkbox groups --- */
@@ -198,6 +206,7 @@
     gap: 10px;
     font-size: 0.93rem;
     font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     text-transform: none;
     letter-spacing: 0;
     color: var(--text);
@@ -574,6 +583,223 @@
     margin-top: 8px;
     text-align: right;
   }
+
+  /* --- Flavour radio with description --- */
+  .radio-group label .flavour-name {
+    font-weight: 600;
+    font-size: 0.93rem;
+    display: block;
+    line-height: 1.3;
+  }
+  .radio-group label .flavour-desc {
+    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--brown-pale);
+    display: block;
+    margin-top: 1px;
+    line-height: 1.4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .radio-group label:has(.flavour-name) {
+    align-items: flex-start;
+    padding: 10px 14px;
+  }
+  .radio-group label:has(.flavour-name) input[type="radio"] {
+    margin-top: 2px;
+  }
+
+  /* --- Garnish item wrapper --- */
+  .garnish-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .garnish-item > label {
+    margin-bottom: 0;
+  }
+
+  /* --- Sub-options (garnishes) --- */
+  .sub-options {
+    display: none;
+    margin-top: 8px;
+    margin-left: 28px;
+    padding: 12px 14px;
+    background: #fdf8ec;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--cream-dark);
+    animation: fadeIn 0.18s ease;
+  }
+  .sub-options.visible { display: block; }
+  .sub-options .sub-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--brown-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .sub-options .radio-group {
+    gap: 6px;
+  }
+  .sub-options .radio-group label {
+    font-size: 0.88rem;
+    padding: 7px 12px;
+    background: var(--white);
+  }
+  .sub-options .number-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sub-options .number-row label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--brown);
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    margin-bottom: 0;
+    cursor: default;
+    width: auto;
+  }
+  .sub-options .candle-nums {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .sub-options .candle-nums input[type="text"] {
+    width: 52px;
+    padding: 7px 10px;
+    font-size: 1rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .sub-options .candle-nums-label {
+    font-size: 0.78rem;
+    color: var(--brown-pale);
+    margin-top: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  /* --- Cake shape / size visual selector --- */
+  .size-selector,
+  .shape-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .size-selector,
+    .shape-selector { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .size-option {
+    position: relative;
+  }
+
+  .size-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .size-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 10px 12px;
+    border: 1.5px solid #e0d4b8;
+    border-radius: var(--radius);
+    background: #fffdf5;
+    cursor: pointer;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--brown);
+    text-transform: none;
+    letter-spacing: 0;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    min-height: 110px;
+  }
+
+  .size-option label:hover {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .size-option input[type="radio"]:checked + label {
+    border-color: var(--brown);
+    background: #fdf3d8;
+    box-shadow: 0 0 0 2px rgba(92,51,23,0.15);
+  }
+
+  .size-option svg {
+    flex-shrink: 0;
+  }
+
+  /* --- Cake size preview --- */
+  #sizePreview {
+    margin-top: 14px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    border: 1.5px solid #e0d4b8;
+    display: none;
+    animation: fadeIn 0.22s ease;
+  }
+
+  #sizePreview.visible { display: block; }
+
+  #sizePreview svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Toast notification */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    background: var(--toast-bg);
+    color: var(--toast-fg);
+    padding: 0.85rem 1.4rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(92,51,23,0.30);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: calc(100vw - 2rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  #toast.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  #toast .toast-icon { font-size: 1.1rem; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -583,7 +809,18 @@
   <!-- Success screen (hidden until submit) -->
   <div class="success-screen" id="successScreen">
     <h2>We got it — thank you!</h2>
-    <p>Your inquiry is in our inbox. We'll be in touch within 72 hours. We can't wait to bake something beautiful for you!</p>
+    <p>Your inquiry is in our inbox. We'll be in touch within 1 week. We can't wait to bake something beautiful for you!</p>
+    <button onclick="window.location.reload()" style="
+      margin-top: 24px;
+      background: transparent;
+      border: 1.5px solid var(--brown);
+      color: var(--brown);
+      font-family: 'Recoleta', Georgia, serif;
+      font-size: 0.9rem;
+      padding: 10px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+    ">Submit another inquiry</button>
   </div>
 
   <div class="form-body" id="formBody">
@@ -635,7 +872,26 @@
         <div id="dateGatedFields">
           <div class="field">
             <label>Event time <span class="req">*</span> <span class="hint">Approximate is fine</span></label>
-            <input type="time" name="eventTime" required>
+            <select name="eventTime" required>
+              <option value="" disabled selected>— select a time —</option>
+              <option>6:00 AM</option>
+              <option>7:00 AM</option>
+              <option>8:00 AM</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+              <option>5:00 PM</option>
+              <option>6:00 PM</option>
+              <option>7:00 PM</option>
+              <option>8:00 PM</option>
+              <option>9:00 PM</option>
+              <option>10:00 PM</option>
+            </select>
           </div>
         </div>
       </div>
@@ -652,23 +908,38 @@
           </div>
 
           <div class="field">
-            <label>Number of guests / portions <span class="req">*</span></label>
-            <input type="number" name="portions" required placeholder="e.g. 50" min="1" autocomplete="off">
-          </div>
-
-          <div class="field">
             <label>Flavour <span class="req">*</span></label>
             <div class="radio-group" id="flavourGroup">
-              <label><input type="radio" name="flavour" value="Chocolate Lover's" required> Chocolate Lover's</label>
-              <label><input type="radio" name="flavour" value="Classic Confetti Crunch"> Classic Confetti Crunch</label>
-              <label><input type="radio" name="flavour" value="Carrot Caramel Praline"> Carrot Caramel Praline</label>
-              <label><input type="radio" name="flavour" value="Pistachio, Matcha, Mixed Berry"> Pistachio, Matcha, Mixed Berry</label>
-              <label><input type="radio" name="flavour" value="Red Velvet Raspberry"> Red Velvet Raspberry</label>
-              <label><input type="radio" name="flavour" value="Vanilla Bean & Salted Caramel"> Vanilla Bean &amp; Salted Caramel</label>
-              <label><input type="radio" name="flavour" value="Brown Butter Pecan"> Brown Butter Pecan</label>
-              <label><input type="radio" name="flavour" value="Blueberry & Lemon"> Blueberry &amp; Lemon</label>
-              <label><input type="radio" name="flavour" value="Strawberry Milkshake"> Strawberry Milkshake</label>
-              <label><input type="radio" name="flavour" value="Custom (described below)"> I've got a custom flavour in mind... (describe it below!)</label>
+              <label><input type="radio" name="flavour" value="Brown Butter Pecan" required>
+                <span><span class="flavour-name">Brown Butter Pecan</span><span class="flavour-desc">brown butter pecan cake · vanilla milk soak · caramel praline fudge · whipped white chocolate cream filling · toasted pecans · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Chocolate Lover's">
+                <span><span class="flavour-name">Chocolate Lover's</span><span class="flavour-desc">salted chocolate cake · chocolate milk soak · milk chocolate cremeux · chocolate fudge · chocolate cookie crunch · chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Classic Confetti Crunch">
+                <span><span class="flavour-name">Classic Confetti Crunch</span><span class="flavour-desc">confetti sprinkle cake · vanilla milk soak · cake batter frosting · confetti crunch crumb · sprinkles · vanilla bean buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Carrot, Caramel, Cream Cheese">
+                <span><span class="flavour-name">Carrot, Caramel, Cream Cheese</span><span class="flavour-desc">spiced carrot cake · vanilla bean milk soak · whipped white chocolate cream cheese filling · salted caramel · walnut praline · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Pistachio, Lemon & Matcha">
+                <span><span class="flavour-name">Pistachio, Lemon &amp; Matcha</span><span class="flavour-desc">pistachio matcha cake · lemon syrup soak · pistachio cremeux · lemon cream · milk cookie crumb · pistachio matcha white chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Red Velvet Raspberry">
+                <span><span class="flavour-name">Red Velvet Raspberry</span><span class="flavour-desc">rich red velvet cake · vanilla bean milk soak · whipped white chocolate cream cheese frosting filling · raspberry puree · vanilla bean buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Strawberry Lemon">
+                <span><span class="flavour-name">Strawberry Lemon</span><span class="flavour-desc">lemon poppyseed cake · lemon syrup soak · strawberry compote · fresh berries · lemon cream · crunchy milk crumb · strawberry buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Vanilla Bean & Salted Caramel">
+                <span><span class="flavour-name">Vanilla Bean &amp; Salted Caramel</span><span class="flavour-desc">vanilla bean cake · vanilla milk soak · vanilla bean cremeux · milk cookie crumb · salted caramel · vanilla bean white chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Pumpkin Spice Cake">
+                <span><span class="flavour-name">Pumpkin Spice Cake <em style="font-style:italic;font-weight:400;color:var(--brown-pale);font-size:0.8em;">seasonal!</em></span><span class="flavour-desc">pumpkin cake · vanilla milk soak · milk cookie crumb · salted caramel · whipped white chocolate cream cheese filling · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Custom (described below)">
+                <span><span class="flavour-name">I've got a custom flavour in mind...</span><span class="flavour-desc">describe it in the notes below!</span></span>
+              </label>
             </div>
           </div>
 
@@ -682,27 +953,93 @@
           <div class="card-title">Cake Style &amp; Size</div>
 
           <div class="field">
-            <label>Preferred cake size <span class="req">*</span></label>
-            <select name="cakeSize" required>
-              <option value="" disabled selected>Preferred cake size *</option>
-              <option>1 Tier</option>
-              <option>2 Tiers</option>
-              <option>3 Tiers</option>
-              <option>Something bigger</option>
-              <option>Cupcakes</option>
-              <option>Not sure — help me!</option>
-            </select>
+            <label>Cake shape <span class="req">*</span></label>
+            <div class="shape-selector" id="shapeSelectorGroup">
+
+              <!-- Round -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeRound" value="Round" required>
+                <label for="shapeRound">
+                  <!-- Round cake side view — outline only -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- cake body: left wall, bottom arc, right wall -->
+                    <path d="M 8 16 L 8 38 A 18 5.5 0 0 0 44 38 L 44 16" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- top ellipse -->
+                    <ellipse cx="26" cy="16" rx="18" ry="5.5" stroke="#8b5a2b" stroke-width="1.5"/>
+                  </svg>
+                  Round
+                </label>
+              </div>
+
+              <!-- Heart -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeHeart" value="Heart">
+                <label for="shapeHeart">
+                  <!--
+                    Heart top profile: built from the same HEART_BEZ control points as the visualizer.
+                    Normalised coords → scaled to cx=26, cy=20, rx=17, ry=13 (top face)
+                    Then front wall drops 9px to make cake body.
+                    Path goes: top-centre → right lobe → right-bottom → centre-bottom → left-bottom → left lobe → back to top-centre
+                  -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- top heart face — same bezier as HEART_BEZ, scaled cx=26 cy=20 rx=17 ry=13 -->
+                    <path d="M26,7
+                      C31.1,7 35.7,9.3 38.5,13.0
+                      C41.6,17.1 41.4,22.7 38.2,26.6
+                      C35.3,30.2 31.3,33.2 26,37
+                      C20.7,33.2 16.7,30.2 13.8,26.6
+                      C10.6,22.7 10.4,17.1 13.5,13.0
+                      C16.3,9.3 20.9,7 26,7Z"
+                      stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- front wall: left side, bottom edge, right side — drops 8px -->
+                    <path d="M13.8,26.6 C13.0,30.0 17.5,36.5 26,45
+                             C34.5,36.5 39.0,30.0 38.2,26.6"
+                      stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                  </svg>
+                  Heart
+                </label>
+              </div>
+
+              <!-- Sheet -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeSheet" value="Sheet">
+                <label for="shapeSheet">
+                  <!-- Sheet cake — perspective view, all within 52×52 -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- front face -->
+                    <rect x="5" y="24" width="34" height="18" rx="1" stroke="#8b5a2b" stroke-width="1.5"/>
+                    <!-- top face (parallelogram) -->
+                    <path d="M5 24 L13 15 L47 15 L39 24 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- right side face -->
+                    <path d="M39 24 L47 15 L47 33 L39 42 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                  </svg>
+                  Sheet
+                </label>
+              </div>
+
+              <!-- Not sure -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeUnsure" value="Not sure — help me!">
+                <label for="shapeUnsure">
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="26" cy="44" rx="16" ry="4.5" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <rect x="10" y="26" width="32" height="18" rx="2" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <ellipse cx="26" cy="26" rx="16" ry="4.5" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <text x="26" y="21" text-anchor="middle" font-size="16" font-weight="700" fill="#8b5a2b" font-family="Georgia, serif">?</text>
+                  </svg>
+                  Not sure — help me!
+                </label>
+              </div>
+
+            </div>
           </div>
 
-          <div class="field">
-            <label>What do you have in mind? <span class="req">*</span></label>
-            <div class="check-group two-col" id="inMindGroup">
-              <label><input type="checkbox" name="inMind" value="Enough cake for all my guests"> Enough cake for all my guests</label>
-              <label><input type="checkbox" name="inMind" value="Smaller cutting cake"> Smaller cutting cake</label>
-              <label><input type="checkbox" name="inMind" value="Sheet cake"> Sheet cake</label>
-              <label><input type="checkbox" name="inMind" value="Cupcakes"> Cupcakes</label>
-              <label><input type="checkbox" name="inMind" value="Table Desserts"> Table Desserts</label>
-            </div>
+          <div class="field" id="sizeField">
+            <label>Size <span class="req">*</span> <span class="hint" id="sizeHint">Select a shape above first</span></label>
+            <select name="cakeSize" id="cakeSizeSelect" required disabled>
+              <option value="" disabled selected>— select a shape first —</option>
+            </select>
+            <div id="sizePreview"></div>
           </div>
 
           <div class="field">
@@ -744,8 +1081,36 @@
           <div class="field">
             <label>Interested in any extra fun cake garnishes? <span class="req">*</span></label>
             <div class="check-group" id="garnishGroup">
-              <label><input type="checkbox" name="garnishes" value="Flowers"> Flowers (prices vary)</label>
-              <label><input type="checkbox" name="garnishes" value="Birthday Candles"> Birthday Candles (3 for $3)</label>
+              <div class="garnish-item">
+                <label id="flowersLabel"><input type="checkbox" name="garnishes" value="Flowers" id="garnishFlowers"> Flowers (prices vary)</label>
+                <div class="sub-options" id="flowersSizeOptions">
+                  <div class="sub-label">Flower size</div>
+                  <div class="radio-group">
+                    <label><input type="radio" name="flowerSize" value="Small"> Small</label>
+                    <label><input type="radio" name="flowerSize" value="Medium"> Medium</label>
+                    <label><input type="radio" name="flowerSize" value="Large"> Large</label>
+                    <label><input type="radio" name="flowerSize" value="Not sure yet"> Not sure yet</label>
+                  </div>
+                </div>
+              </div>
+              <div class="garnish-item">
+                <label id="candlesLabel"><input type="checkbox" name="garnishes" value="Birthday Candles" id="garnishCandles"> Birthday Candles</label>
+                <div class="sub-options" id="candleTypeOptions">
+                  <div class="sub-label">Candle type</div>
+                  <div class="radio-group" id="candleTypeGroup">
+                    <label><input type="radio" name="candleType" value="3 single candles ($3)"> 3 single candles ($3)</label>
+                    <label><input type="radio" name="candleType" value="Numbered candles ($2.50/ea)"> Numbered candles ($2.50/ea)</label>
+                  </div>
+                  <div id="candleNumbersField" style="display:none; margin-top:8px;">
+                    <div class="sub-label" style="margin-bottom:6px;">Which numbers? <span style="font-weight:400;text-transform:none;">(up to 3)</span></div>
+                    <div class="candle-nums">
+                      <input type="text" name="candleNum1" maxlength="2" placeholder="2" aria-label="First number">
+                      <input type="text" name="candleNum2" maxlength="2" placeholder="5" aria-label="Second number">
+                      <input type="text" name="candleNum3" maxlength="2" placeholder="" aria-label="Third number">
+                    </div>
+                  </div>
+                </div>
+              </div>
               <label><input type="checkbox" name="garnishes" value="Birch Bar + Co Cake Topper"> Birch Bar + Co Cake Topper (prices vary, we can chat!)</label>
               <label><input type="checkbox" name="garnishes" value="None"> None of the above</label>
             </div>
@@ -779,9 +1144,61 @@
             </div>
           </div>
 
+          <div class="field">
+            <label>When would you like to pick up / have it delivered? <span class="req">*</span></label>
+            <div class="radio-group" id="pickupTimingGroup">
+              <label><input type="radio" name="pickupTiming" value="Same day as event" required> Same day as event</label>
+              <label><input type="radio" name="pickupTiming" value="The day before"> The day before</label>
+              <label><input type="radio" name="pickupTiming" value="Other"> Other</label>
+            </div>
+          </div>
+
           <div class="field" id="deliveryAddressField" style="display:none">
             <label>Address for delivery quote <span class="hint">Start typing — verified addresses will appear</span></label>
             <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off">
+          </div>
+
+          <div id="deliveryContactFields" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label>Delivery contact name</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="text" name="deliveryContactName" id="deliveryContactName" placeholder="Jane Smith" autocomplete="off" style="flex:1;">
+                  <button type="button" id="copyMyName" title="Use my name" style="
+                    flex-shrink:0;
+                    padding:10px 13px;
+                    background:var(--cream);
+                    border:1.5px solid #e0d4b8;
+                    border-radius:var(--radius);
+                    cursor:pointer;
+                    font-size:0.82rem;
+                    color:var(--brown);
+                    font-weight:600;
+                    white-space:nowrap;
+                    transition:border-color 0.15s,background 0.15s;
+                  ">Use mine</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Delivery contact phone</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="tel" name="deliveryContactPhone" id="deliveryContactPhone" placeholder="250-555-0100" autocomplete="off" style="flex:1;">
+                  <button type="button" id="copyMyPhone" title="Copy my phone number" style="
+                    flex-shrink:0;
+                    padding:10px 13px;
+                    background:var(--cream);
+                    border:1.5px solid #e0d4b8;
+                    border-radius:var(--radius);
+                    cursor:pointer;
+                    font-size:0.82rem;
+                    color:var(--brown);
+                    font-weight:600;
+                    white-space:nowrap;
+                    transition:border-color 0.15s,background 0.15s;
+                  ">Use mine</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -802,7 +1219,7 @@
 
         <div class="submit-wrap">
           <button type="submit" id="submitBtn">Send My Inquiry</button>
-          <p class="submit-note">We'll be in touch within 72 hours!</p>
+          <p class="submit-note">We'll be in touch within 1 week!</p>
         </div>
 
       </div><!-- /mainForm -->
@@ -913,19 +1330,430 @@
     });
   });
 
+  // ─── Cake Size Visualizer (ported from cake_size_visualizer.html) ───────────
+
+  const VIZ_SIZES = [{"name":"Quarter Sheet (Short)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":3}]},{"name":"Quarter Sheet (Standard)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":5}]},{"name":"Half Sheet","shape":"sheet","party":40,"wedding":null,"tiers":[{"s":"sheet","w":16.5,"l":11.5,"h":5}]},{"name":"Full Sheet","shape":"sheet","party":80,"wedding":null,"tiers":[{"s":"sheet","w":33,"l":11.5,"h":5}]},{"name":"6\" Short","shape":"round","party":8,"wedding":10,"tiers":[{"s":"round","d":6,"h":3}]},{"name":"6\" Standard","shape":"round","party":12,"wedding":15,"tiers":[{"s":"round","d":6,"h":5}]},{"name":"7\" Short","shape":"round","party":12,"wedding":16,"tiers":[{"s":"round","d":7,"h":3}]},{"name":"7\" Standard","shape":"round","party":15,"wedding":20,"tiers":[{"s":"round","d":7,"h":5}]},{"name":"8\" Short","shape":"round","party":16,"wedding":20,"tiers":[{"s":"round","d":8,"h":3}]},{"name":"8\" Standard","shape":"round","party":20,"wedding":28,"tiers":[{"s":"round","d":8,"h":5}]},{"name":"9\" Short","shape":"round","party":20,"wedding":30,"tiers":[{"s":"round","d":9,"h":3}]},{"name":"9\" Standard","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":9,"h":5}]},{"name":"10\" Short","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":10,"h":3}]},{"name":"12\" Short","shape":"round","party":40,"wedding":50,"tiers":[{"s":"round","d":12,"h":3}]},{"name":"10\" Standard","shape":"round","party":40,"wedding":54,"tiers":[{"s":"round","d":10,"h":5}]},{"name":"12\" Standard","shape":"round","party":54,"wedding":74,"tiers":[{"s":"round","d":12,"h":5}]},{"name":"Two Tier: Std 8in + Std 6in","shape":"round","party":32,"wedding":43,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 6in","shape":"round","party":44,"wedding":55,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 7in","shape":"round","party":47,"wedding":60,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 7in","shape":"round","party":55,"wedding":74,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 8in","shape":"round","party":60,"wedding":82,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 8in","shape":"round","party":74,"wedding":102,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 9in","shape":"round","party":86,"wedding":114,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5}]},{"name":"Two Tier: Std 12in + Std 10in","shape":"round","party":94,"wedding":128,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5}]},{"name":"Three Tier: Std 8in + short 7in + Std 6in","shape":"round","party":44,"wedding":59,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":7,"h":3},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 10in + Std 8in + Short 6in","shape":"round","party":68,"wedding":92,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":3}]},{"name":"Three Tier: Std 10in + Std 8in + Std 6in","shape":"round","party":72,"wedding":97,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 8in + Std 6in","shape":"round","party":86,"wedding":117,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 9in + Std 7in","shape":"round","party":101,"wedding":134,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Three Tier: Std 12in + Short 10in + Std 8in","shape":"round","party":106,"wedding":142,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":3},{"s":"round","d":8,"h":5}]},{"name":"Three Tier: Std 12in + Std 10in + Std 8in","shape":"round","party":114,"wedding":156,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Four Tier: Std 12in + Std 10in + Std 8in + Std 6in","shape":"round","party":126,"wedding":171,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"6\" Short heart","shape":"heart","party":null,"wedding":null,"tiers":[{"s":"heart","d":6,"h":3}]},{"name":"6\" heart standard","shape":"heart","party":null,"wedding":null,"tiers":[{"s":"heart","d":6,"h":5}]},{"name":"9\" Short heart","shape":"heart","party":null,"wedding":null,"tiers":[{"s":"heart","d":9,"h":3}]},{"name":"9\" Heart standard","shape":"heart","party":null,"wedding":null,"tiers":[{"s":"heart","d":9,"h":5}]},{"name":"Two Tier: Heart 9in + Heart 6in","shape":"heart","party":32,"wedding":40,"tiers":[{"s":"heart","d":9,"h":5},{"s":"heart","d":6,"h":5}]}];
+
+  // Drawing engine constants
+  const VIZ_PX_MAX = 26, VIZ_ELL = 0.17, VIZ_ELL_HEART = 0.46, VIZ_STROKE = 1.6;
+  const VIZ_W = 760, VIZ_H = 460, VIZ_PAD = 34, VIZ_TEXT_W = 190;
+  const HEART_BEZ = [
+    [ 0.00,-1.00],
+    [ 0.30,-0.80,  0.93,-0.30,  1.00, 0.14],
+    [ 1.06, 0.55,  0.84, 0.94,  0.48, 0.94],
+    [ 0.21, 0.94,  0.06, 0.72,  0.00, 0.46],
+    [-0.06, 0.72, -0.21, 0.94, -0.48, 0.94],
+    [-0.84, 0.94, -1.06, 0.55, -1.00, 0.14],
+    [-0.93,-0.30, -0.30,-0.80,  0.00,-1.00]
+  ];
+  const HEART_SEG = 16;
+  let HEART_CACHE = null;
+
+  function heartUnit() {
+    if (HEART_CACHE) return HEART_CACHE;
+    const p = [];
+    let [px0, py0] = HEART_BEZ[0];
+    p.push([px0, py0]);
+    for (let s = 1; s < HEART_BEZ.length; s++) {
+      const [c1x,c1y,c2x,c2y,ex,ey] = HEART_BEZ[s];
+      for (let j = 1; j <= HEART_SEG; j++) {
+        const u = j/HEART_SEG, v = 1-u;
+        p.push([ v*v*v*px0 + 3*v*v*u*c1x + 3*v*u*u*c2x + u*u*u*ex,
+                 v*v*v*py0 + 3*v*v*u*c1y + 3*v*u*u*c2y + u*u*u*ey ]);
+      }
+      px0 = ex; py0 = ey;
+    }
+    const xs = p.map(q=>q[0]), ys = p.map(q=>q[1]);
+    const x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+    const mx=(x0+x1)/2, my=(y0+y1)/2, sx=2/(x1-x0), sy=2/(y1-y0);
+    HEART_CACHE = p.map(q=>[ (q[0]-mx)*sx, (q[1]-my)*sy ]);
+    return HEART_CACHE;
+  }
+
+  function heartPts(cx, cy, rx, ry) {
+    return heartUnit().map(u => [ cx + u[0]*rx, cy - u[1]*ry ]);
+  }
+
+  const ptsPath = p => 'M ' + p.map(q=>`${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(' L ') + ' Z';
+
+  function heartWall(cx, yT, rx, ry, hh) {
+    const p = heartPts(cx, yT, rx, ry);
+    let iMin = 0, iMax = 0;
+    p.forEach((q,i) => { if (q[0] < p[iMin][0]) iMin = i; if (q[0] > p[iMax][0]) iMax = i; });
+    const walk = (a, b) => { const out = []; for (let i = a; ; i = (i+1) % p.length){ out.push(p[i]); if (i === b) break; } return out; };
+    const armA = walk(iMax, iMin), armB = walk(iMin, iMax).reverse();
+    const deep = arr => Math.max(...arr.map(q=>q[1]));
+    const front = deep(armA) >= deep(armB) ? armA : armB;
+    const top = front.map(q=>`${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(' L ');
+    const bot = front.slice().reverse().map(q=>`${q[0].toFixed(2)} ${(q[1]+hh).toFixed(2)}`).join(' L ');
+    return `M ${top} L ${bot} Z`;
+  }
+
+  function vizEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+
+  function drawSheetCake(size) {
+    // Draws a rectangular sheet cake in isometric-ish perspective
+    const t = size.tiers[0]; // sheet cakes are always single-tier
+    const W = VIZ_W, H = VIZ_H;
+    // Scale the cake to fit nicely in the left ~570px of the canvas
+    const drawW = W - VIZ_TEXT_W - VIZ_PAD*2 - 60;
+    const drawH = H - VIZ_PAD*2 - 60;
+    // px per inch: fit both width+length in drawing area
+    // perspective skew: depth shows at 35deg
+    const skewX = 0.6, skewY = 0.35; // depth vector per unit length
+    const px = Math.min(
+      drawW / (t.w + t.l * skewX + 10),
+      drawH / (t.h + t.l * skewY + 4)
+    );
+    const fw = t.w * px;  // front face width
+    const fh = t.h * px;  // cake height in px
+    const dl = t.l * px;  // depth length in px
+    const dx = dl * skewX; // depth x-offset
+    const dy = dl * skewY; // depth y-offset (upward = negative)
+
+    // Front-bottom-left corner
+    const ox = VIZ_PAD + 24;
+    const oy = H - VIZ_PAD - 18;
+
+    // Key corners:
+    // front face: BL(ox,oy) → BR(ox+fw,oy) → TR(ox+fw,oy-fh) → TL(ox,oy-fh)
+    // back/top-depth: TL goes to TL+depth = (ox+dx, oy-fh-dy)
+    const BL = [ox,           oy          ];
+    const BR = [ox+fw,        oy          ];
+    const TR = [ox+fw,        oy-fh       ];
+    const TL = [ox,           oy-fh       ];
+    const TL2= [ox+dx,        oy-fh-dy    ]; // back-top-left
+    const TR2= [ox+fw+dx,     oy-fh-dy    ]; // back-top-right
+    const BR2= [ox+fw+dx,     oy-dy       ]; // back-bottom-right
+
+    const pt = (p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+
+    // Front face
+    const frontFace = `<path d="M${pt(BL)} L${pt(BR)} L${pt(TR)} L${pt(TL)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+    // Top face
+    const topFace   = `<path d="M${pt(TL)} L${pt(TR)} L${pt(TR2)} L${pt(TL2)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+    // Right side face
+    const rightFace = `<path d="M${pt(TR)} L${pt(TR2)} L${pt(BR2)} L${pt(BR)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+
+    // Board under cake (thin slab)
+    const brd = 6;
+    const BBL = [BL[0]-brd, BL[1]+brd*0.3];
+    const BBR = [BR[0]+brd, BR[1]+brd*0.3];
+    const BBR2= [BR2[0]+brd, BR2[1]+brd*0.3];
+    const boardTop = `<path d="M${pt(BBL)} L${pt(BBR)} L${pt(BBR2)} L${pt([TL2[0]+brd, TL2[1]+brd*0.3])} L${pt([TL2[0]-brd, TL2[1]+brd*0.3])} Z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/>`;
+
+    // Dimension arrows helper
+    const A = (x1,y1,x2,y2) =>
+      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
+
+    // Width arrow along front bottom
+    const wmx = (BL[0]+BR[0])/2, wmy = oy + 22;
+    const widthArrow = A(BL[0], wmy, BR[0], wmy)
+      + `<line x1="${BL[0]}" y1="${oy+2}" x2="${BL[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
+      + `<line x1="${BR[0]}" y1="${oy+2}" x2="${BR[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
+      + `<rect x="${wmx-22}" y="${wmy-9}" width="44" height="14" fill="#fff"/>`
+      + `<text x="${wmx}" y="${wmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.w}"</text>`;
+
+    // Height arrow along front-right edge
+    const hmx = TR[0] + 20, hmy = (TR[1]+BR[1])/2;
+    const heightArrow = A(hmx, TR[1], hmx, BR[1])
+      + `<line x1="${TR[0]+1}" y1="${TR[1]}" x2="${hmx+4}" y2="${TR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
+      + `<line x1="${BR[0]+1}" y1="${BR[1]}" x2="${hmx+4}" y2="${BR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
+      + `<text x="${hmx+9}" y="${hmy+4}" font-size="12.5" fill="#000">${t.h}"</text>`;
+
+    // Length arrow along top-right edge (TR → TR2)
+    const lmx = (TR[0]+TR2[0])/2 + 6, lmy = (TR[1]+TR2[1])/2 - 10;
+    const lengthArrow = A(TR[0], TR[1], TR2[0], TR2[1])
+      + `<rect x="${lmx-18}" y="${lmy-9}" width="36" height="14" fill="#fff"/>`
+      + `<text x="${lmx}" y="${lmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.l}"</text>`;
+
+    // Serves panel (right side)
+    const tx = W - VIZ_TEXT_W - VIZ_PAD + 26, ty = H/2;
+    const lo = size.party;
+    const big = lo ? `~${lo}` : '—';
+    const fs  = 54;
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="#000">${big}</text>`
+              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">party portions</text>`
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+
+    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
+    const spec  = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${t.w}" × ${t.l}" × ${t.h}"</text>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
+<rect width="${W}" height="${H}" fill="#fff"/>
+<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
+${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heightArrow}${lengthArrow}${txt}</svg>`;
+  }
+
+  function drawCake(size) {
+    if (size.shape === 'sheet') return drawSheetCake(size);
+    const tiers = size.tiers;
+    const ell = (size.shape === 'heart') ? VIZ_ELL_HEART : VIZ_ELL;
+    const maxD = Math.max(...tiers.map(t=>t.d));
+    const totH = tiers.reduce((a,t)=>a+t.h,0);
+    const availW = VIZ_W - VIZ_TEXT_W - VIZ_PAD*2 - 90;
+    const availH = VIZ_H - VIZ_PAD*2 - 60;
+    const px = Math.min(VIZ_PX_MAX, availW/maxD, availH/(totH + maxD*ell*2));
+
+    const cx = VIZ_PAD + 60 + (maxD*px)/2;
+    const topLimit = VIZ_PAD + 44, botLimit = VIZ_H - VIZ_PAD - 6;
+    const topRy = (tiers[tiers.length-1].d*px/2)*ell;
+    const boardRy = (maxD*px/2 + 20)*ell;
+    const drawH = totH*px + topRy + boardRy;
+    const baseY = Math.min(botLimit - boardRy, topLimit + topRy + (botLimit - topLimit - drawH)/2 + totH*px);
+
+    let body = '', dims = '';
+    const A = (x1,y1,x2,y2) =>
+      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
+
+    let y = baseY;
+    const geo = [];
+    tiers.forEach(t => {
+      const rx = t.d*px/2, ry = rx*ell, hh = t.h*px;
+      geo.push({ t, shape: t.s || 'round', rx, ry, hh, yB: y, yT: y - hh });
+      y -= hh;
+    });
+
+    const bot = geo[0];
+    const bR = bot.rx + (bot.shape === 'heart' ? 20 : 16), bRy = bR*ell;
+    body += `<ellipse cx="${cx}" cy="${baseY}" rx="${bR}" ry="${bRy}" fill="#fff" stroke="#000" stroke-width="1.1"/>`;
+
+    geo.forEach(g => {
+      if (g.shape === 'heart') {
+        body += `<path d="${heartWall(cx, g.yT, g.rx, g.ry, g.hh)}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+        body += `<path d="${ptsPath(heartPts(cx, g.yT, g.rx, g.ry))}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+      } else {
+        body += `<path d="M ${cx-g.rx} ${g.yT} L ${cx-g.rx} ${g.yB} A ${g.rx} ${g.ry} 0 0 0 ${cx+g.rx} ${g.yB} L ${cx+g.rx} ${g.yT}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+        body += `<ellipse cx="${cx}" cy="${g.yT}" rx="${g.rx}" ry="${g.ry}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}"/>`;
+      }
+    });
+
+    geo.forEach(g => {
+      const my = (g.yT + g.yB)/2 + g.ry*0.3;
+      dims += A(cx-g.rx+1, my, cx+g.rx-1, my);
+      dims += `<rect x="${cx-22}" y="${my-9}" width="44" height="14" fill="#fff"/>`;
+      dims += `<text x="${cx}" y="${my-1}" text-anchor="middle" font-size="12.5" font-family="inherit" fill="#000">${g.t.d}"</text>`;
+    });
+
+    const hx = cx + Math.max(...geo.map(g=>g.rx)) + 34;
+    geo.forEach(g => {
+      dims += `<line x1="${cx+g.rx}" y1="${g.yT}" x2="${hx+7}" y2="${g.yT}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
+      dims += A(hx, g.yT, hx, g.yB);
+      dims += `<text x="${hx+9}" y="${(g.yT+g.yB)/2+4}" font-size="12.5" fill="#000">${g.t.h}"</text>`;
+    });
+    dims += `<line x1="${cx+bot.rx}" y1="${baseY}" x2="${hx+7}" y2="${baseY}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
+
+    const tx = VIZ_W - VIZ_TEXT_W - VIZ_PAD + 26, ty = VIZ_H/2;
+    const lo = size.party, hi = size.wedding;
+    const none = (lo == null && hi == null);
+    const both = (lo != null && hi != null && lo !== hi);
+    const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
+    const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
+    const cap  = none ? 'contact us for details'
+               : both ? 'party to wedding portions'
+               : (hi != null ? 'wedding portions' : 'party portions');
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
+              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">${cap}</text>`
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+
+    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
+    const spec  = tiers.map(t=>`${t.d}"${(t.s||'round')==='heart'?' heart':''} × ${t.h}"`).join('  +  ');
+    const sub   = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${spec}</text>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIZ_W} ${VIZ_H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
+<rect width="${VIZ_W}" height="${VIZ_H}" fill="#fff"/>
+<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
+${title}${sub}${body}${dims}${txt}</svg>`;
+  }
+
+  // ─── Shape → size dropdown (uses VIZ_SIZES as source of truth) ───────────
+
+  // Static options for shapes not covered by the visualizer
+  const STATIC_SIZES = {
+    'Not sure — help me!': [
+      { value: 'Not sure — help me decide!', label: 'Not sure — help me decide!' },
+    ],
+  };
+
+  const cakeSizeSelect = document.getElementById('cakeSizeSelect');
+  const sizeHint       = document.getElementById('sizeHint');
+  const sizePreview    = document.getElementById('sizePreview');
+
+  // Index VIZ_SIZES by option value for fast lookup on select change
+  const vizSizeByValue = {};
+
+  function buildSizeLabel(s) {
+    const lo = s.party, hi = s.wedding;
+    if (lo != null && hi != null && lo !== hi) return `${s.name}  ·  ${lo}–${hi} servings`;
+    if (hi != null) return `${s.name}  ·  ~${hi} servings`;
+    if (lo != null) return `${s.name}  ·  ~${lo} servings`;
+    return s.name;
+  }
+
+  document.querySelectorAll('input[name="cakeShape"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const shape = this.value;
+
+      // Clear preview
+      sizePreview.classList.remove('visible');
+      sizePreview.innerHTML = '';
+
+      // Rebuild dropdown
+      cakeSizeSelect.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value    = '';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      placeholder.textContent = '— choose a size —';
+      cakeSizeSelect.appendChild(placeholder);
+
+      if (shape === 'Round' || shape === 'Heart' || shape === 'Sheet') {
+        const shapeKey = shape.toLowerCase(); // 'round', 'heart', or 'sheet'
+        VIZ_SIZES
+          .filter(s => s.shape === shapeKey)
+          .forEach(s => {
+            const opt = document.createElement('option');
+            opt.value       = s.name;
+            opt.textContent = buildSizeLabel(s);
+            vizSizeByValue[s.name] = s;
+            cakeSizeSelect.appendChild(opt);
+          });
+      } else {
+        // Not sure — static options, no preview
+        const opts = STATIC_SIZES[shape] || [];
+        opts.forEach(o => {
+          const opt = document.createElement('option');
+          opt.value       = o.value;
+          opt.textContent = o.label;
+          cakeSizeSelect.appendChild(opt);
+        });
+      }
+
+      cakeSizeSelect.disabled = false;
+      cakeSizeSelect.required = true;
+      sizeHint.textContent    = '';
+    });
+  });
+
+  // Live SVG preview when a size is selected
+  cakeSizeSelect.addEventListener('change', function () {
+    const size = vizSizeByValue[this.value];
+    if (size) {
+      sizePreview.innerHTML = drawCake(size);
+      sizePreview.classList.add('visible');
+    } else {
+      sizePreview.classList.remove('visible');
+      sizePreview.innerHTML = '';
+    }
+  });
+
   document.querySelectorAll('.check-group input[type="checkbox"]').forEach(input => {
     input.addEventListener('change', function () {
       this.closest('label').classList.toggle('checked', this.checked);
     });
   });
 
-  // --- Show/hide delivery address ---
-  document.querySelectorAll('input[name="pickup"]').forEach(r => {
+  // --- Garnish sub-options ---
+  const garnishFlowers = document.getElementById('garnishFlowers');
+  const flowersSizeOptions = document.getElementById('flowersSizeOptions');
+  if (garnishFlowers && flowersSizeOptions) {
+    garnishFlowers.addEventListener('change', function () {
+      flowersSizeOptions.classList.toggle('visible', this.checked);
+    });
+  }
+
+  const garnishCandles = document.getElementById('garnishCandles');
+  const candleTypeOptions = document.getElementById('candleTypeOptions');
+  const candleNumbersField = document.getElementById('candleNumbersField');
+  if (garnishCandles && candleTypeOptions) {
+    garnishCandles.addEventListener('change', function () {
+      candleTypeOptions.classList.toggle('visible', this.checked);
+      if (!this.checked && candleNumbersField) {
+        candleNumbersField.style.display = 'none';
+        // Clear candle type selection
+        document.querySelectorAll('input[name="candleType"]').forEach(r => { r.checked = false; r.closest('label').classList.remove('selected'); });
+      }
+    });
+  }
+
+  // Show number inputs when "Numbered candles" is chosen
+  document.querySelectorAll('input[name="candleType"]').forEach(r => {
     r.addEventListener('change', function () {
-      document.getElementById('deliveryAddressField').style.display =
-        this.value === 'Delivery' ? 'block' : 'none';
+      // Radio styling
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+      // Show number inputs only for numbered candles
+      if (candleNumbersField) {
+        candleNumbersField.style.display = (this.value === 'Numbered candles ($2.50/ea)') ? 'block' : 'none';
+      }
     });
   });
+
+  // Flower size radio styling
+  document.querySelectorAll('input[name="flowerSize"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  // Pickup timing radio styling
+  document.querySelectorAll('input[name="pickupTiming"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  // --- Show/hide delivery address + contact fields ---
+  document.querySelectorAll('input[name="pickup"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const isDelivery = this.value === 'Delivery';
+      document.getElementById('deliveryAddressField').style.display  = isDelivery ? 'block' : 'none';
+      document.getElementById('deliveryContactFields').style.display = isDelivery ? 'block' : 'none';
+    });
+  });
+
+  // "Use mine" — name
+  document.getElementById('copyMyName').addEventListener('click', function () {
+    const myName = document.querySelector('input[name="fullName"]').value.trim();
+    const dest   = document.getElementById('deliveryContactName');
+    if (myName) {
+      dest.value = myName;
+      this.textContent = 'Copied!';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 1800);
+    } else {
+      this.textContent = 'Add your name above first';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 2200);
+    }
+  });
+
+  // "Use mine" — phone
+  document.getElementById('copyMyPhone').addEventListener('click', function () {
+    const myPhone = document.querySelector('input[name="phone"]').value.trim();
+    const dest    = document.getElementById('deliveryContactPhone');
+    if (myPhone) {
+      dest.value = myPhone;
+      this.textContent = 'Copied!';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 1800);
+    } else {
+      this.textContent = 'Add your phone above first';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 2200);
+    }
+  });
+
+  // Phone validation helper — strips non-digits, checks for 10 or 11 digits
+  function isValidPhone(val) {
+    const digits = val.replace(/\D/g, '');
+    return digits.length === 10 || (digits.length === 11 && digits[0] === '1');
+  }
 
   // --- Photo upload ---
   const MAX_PHOTOS = 6;
@@ -1033,9 +1861,19 @@
     addFiles(Array.from(e.dataTransfer.files));
   });
 
+  // ---- Toast notification ----
+  let toastTimer = null;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby59wbLWwVEUy1aQNllSrkIK82zUmjv0BR2SfGvO_QVzu5wMzfIfDlhqKWU4rZgSaqF/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -1057,8 +1895,20 @@
       }
     });
 
+    // Phone number format check
+    const phoneField = document.querySelector('input[name="phone"]');
+    if (phoneField.value.trim() && !isValidPhone(phoneField.value)) {
+      valid = false;
+      phoneField.style.borderColor = '#e87c7c';
+      phoneField.addEventListener('input', () => phoneField.style.borderColor = '', { once: true });
+    }
+
     if (!valid) {
-      alert('Please fill in all required fields before submitting.');
+      // Scroll to first invalid field
+      const firstBad = document.querySelector('.radio-group[style*="outline"], input[style*="border-color"], select[style*="border-color"], textarea[style*="border-color"]');
+      if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const isPhoneBad = phoneField.style.borderColor === 'rgb(232, 124, 124)';
+      showToast(isPhoneBad ? 'Please enter a valid 10-digit phone number.' : 'Please fill in all required fields before submitting.');
       return;
     }
 
@@ -1127,5 +1977,10 @@
     }
   }
 </script>
+
+<div id="toast" role="alert" aria-live="assertive">
+  <span class="toast-icon">⚠️</span>
+  <span id="toast-msg">Please fill in all required fields.</span>
+</div>
 </body>
 </html>
