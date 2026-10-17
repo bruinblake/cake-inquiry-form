@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
+<link href="https://fonts.cdnfonts.com/css/recoleta" rel="stylesheet">
+<!-- Replace YOUR_API_KEY with your Google Maps API key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi2y27C4djRsgotqqA7GbxYavbiPZDhlY&libraries=places&region=CA&language=en&callback=initAutocomplete" async defer></script>
+<style>
+  :root {
+    --cream: #fdf2c3;
+    --cream-dark: #f5e89a;
+    --brown: #5c3317;
+    --brown-light: #8b5a2b;
+    --brown-pale: #c4956a;
+    --error-bg: #fff3cd;
+    --error-border: #e8a317;
+    --error-text: #7a4a00;
+    --closed-bg: #fde8e8;
+    --closed-border: #e87c7c;
+    --closed-text: #7a0000;
+    --white: #ffffff;
+    --text: #3a2010;
+    --radius: 8px;
+    --shadow: 0 2px 12px rgba(92,51,23,0.10);
+    --toast-bg: #5c3317;
+    --toast-fg: #fdf2c3;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+
+  .form-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .form-header h1 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 2rem;
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .form-header p {
+    font-size: 0.97rem;
+    color: var(--brown-light);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* --- Date error banners --- */
+  .date-alert {
+    display: none;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 8px;
+    font-size: 0.93rem;
+    line-height: 1.6;
+    animation: slideDown 0.25s ease;
+  }
+
+  .date-alert.show { display: block; }
+
+  .date-alert.too-soon {
+    background: var(--error-bg);
+    border: 1.5px solid var(--error-border);
+    color: var(--error-text);
+  }
+
+  .date-alert.closed-day {
+    background: var(--closed-bg);
+    border: 1.5px solid var(--closed-border);
+    color: var(--closed-text);
+  }
+
+  .date-alert strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+
+  .date-alert a {
+    color: var(--brown);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- Card sections --- */
+  .card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(92,51,23,0.08);
+  }
+
+  .card-title {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.05rem;
+    color: var(--brown);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  /* --- Fields --- */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  label .req { color: #c0392b; margin-left: 2px; }
+  label .hint { font-weight: 400; text-transform: none; color: var(--brown-pale); font-size: 0.83rem; letter-spacing: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e0d4b8;
+    border-radius: var(--radius);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: #fffdf5;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brown-pale);
+    box-shadow: 0 0 0 3px rgba(196,149,106,0.18);
+  }
+
+  /* Date field highlight states */
+  input[type="date"].invalid {
+    border-color: var(--error-border);
+    background: #fffbf0;
+  }
+  input[type="date"].closed {
+    border-color: var(--closed-border);
+    background: #fff8f8;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c3317' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  select:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background-color: #f5ecd5;
+  }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  /* --- Radio & Checkbox groups --- */
+  .radio-group, .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .radio-group label,
+  .check-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.93rem;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text);
+    cursor: pointer;
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    border: 1.5px solid #e0d4b8;
+    background: #fffdf5;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .radio-group label:hover,
+  .check-group label:hover {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .radio-group input[type="radio"],
+  .check-group input[type="checkbox"] {
+    width: 17px; height: 17px;
+    accent-color: var(--brown);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .radio-group label.selected,
+  .check-group label.checked {
+    border-color: var(--brown-pale);
+    background: #fdf3d8;
+  }
+
+  /* Two-column layout for some checkbox groups */
+  .check-group.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) { .check-group.two-col { grid-template-columns: 1fr; } }
+
+  /* --- Blocked section overlay --- */
+  .section-blocked {
+    opacity: 0.38;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.3s;
+  }
+
+  /* --- Submit button --- */
+  .submit-wrap { text-align: center; margin-top: 10px; }
+
+  button[type="submit"] {
+    background: var(--brown);
+    color: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.1rem;
+    padding: 15px 48px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    box-shadow: 0 4px 18px rgba(92,51,23,0.25);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+
+  button[type="submit"]:hover:not(:disabled) {
+    background: var(--brown-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(92,51,23,0.3);
+  }
+
+  button[type="submit"]:disabled {
+    background: #c4b49a;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .submit-note {
+    font-size: 0.82rem;
+    color: var(--brown-pale);
+    margin-top: 12px;
+  }
+
+  /* --- Success state --- */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .success-screen.show { display: block; }
+  .form-body.hidden { display: none; }
+
+  .success-icon { font-size: 3.5rem; margin-bottom: 16px; }
+
+  .success-screen h2 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.8rem;
+    color: var(--brown);
+    margin-bottom: 12px;
+  }
+
+  .success-screen p {
+    color: var(--brown-light);
+    font-size: 0.97rem;
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* --- Preamble sections --- */
+  .preamble { margin-bottom: 36px; }
+
+  .preamble-intro {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .preamble-intro h1 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 2rem;
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .step {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid rgba(92,51,23,0.08);
+    box-shadow: var(--shadow);
+    padding: 18px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    background: var(--brown);
+    color: var(--cream);
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body h3 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+
+  .step-body p {
+    font-size: 0.88rem;
+    color: var(--brown-light);
+    line-height: 1.6;
+  }
+
+  .step-body a { color: var(--brown); font-weight: 700; }
+
+  .info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 520px) { .info-cards { grid-template-columns: 1fr; } }
+
+  .info-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid rgba(92,51,23,0.08);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+  }
+
+  .info-card .info-icon { font-size: 1.4rem; margin-bottom: 6px; }
+
+  .info-card h3 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brown-pale);
+    margin-bottom: 2px;
+  }
+
+  .info-card h4 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1rem;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+
+  .info-card p {
+    font-size: 0.85rem;
+    color: var(--brown-light);
+    line-height: 1.6;
+  }
+
+  .info-card a { color: var(--brown); font-weight: 700; }
+
+  .form-intro-box {
+    background: var(--brown);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .form-intro-box h2 {
+    font-family: 'Recoleta', Georgia, serif;
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .form-intro-box p {
+    font-size: 0.9rem;
+    color: #f5e4c0;
+    line-height: 1.7;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+  /* --- Photo upload --- */
+  .upload-zone {
+    border: 2px dashed #d4c4a0;
+    border-radius: 10px;
+    background: #fffdf5;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .upload-zone:hover,
+  .upload-zone.drag-over {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .upload-zone.drag-over {
+    border-color: var(--brown);
+    background: #fdf3d8;
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+
+  .upload-zone p {
+    font-size: 0.93rem;
+    color: var(--brown-light);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .upload-zone .upload-cta {
+    font-weight: 700;
+    color: var(--brown);
+    text-decoration: underline;
+  }
+
+  .upload-zone .upload-sub {
+    font-size: 0.8rem;
+    color: var(--brown-pale);
+    margin-top: 4px;
+  }
+
+  /* Preview grid */
+  .photo-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .photo-previews:empty { display: none; }
+
+  .preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: #f0e8d0;
+    box-shadow: 0 2px 8px rgba(92,51,23,0.12);
+    animation: popIn 0.2s ease;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-item .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(92,51,23,0.85);
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.15s;
+    z-index: 2;
+  }
+
+  .preview-item .remove-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+  }
+
+  .preview-item .file-name {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(92,51,23,0.65);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 3px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .photo-count {
+    font-size: 0.82rem;
+    color: var(--brown-pale);
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  /* --- Flavour radio with description --- */
+  .radio-group label .flavour-name {
+    font-weight: 600;
+    font-size: 0.93rem;
+    display: block;
+    line-height: 1.3;
+  }
+  .radio-group label .flavour-desc {
+    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--brown-pale);
+    display: block;
+    margin-top: 1px;
+    line-height: 1.4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .radio-group label:has(.flavour-name) {
+    align-items: flex-start;
+    padding: 10px 14px;
+  }
+  .radio-group label:has(.flavour-name) input[type="radio"] {
+    margin-top: 2px;
+  }
+
+  /* --- Garnish item wrapper --- */
+  .garnish-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .garnish-item > label {
+    margin-bottom: 0;
+  }
+
+  /* --- Sub-options (garnishes) --- */
+  .sub-options {
+    display: none;
+    margin-top: 8px;
+    margin-left: 28px;
+    padding: 12px 14px;
+    background: #fdf8ec;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--cream-dark);
+    animation: fadeIn 0.18s ease;
+  }
+  .sub-options.visible { display: block; }
+  .sub-options .sub-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--brown-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .sub-options .radio-group {
+    gap: 6px;
+  }
+  .sub-options .radio-group label {
+    font-size: 0.88rem;
+    padding: 7px 12px;
+    background: var(--white);
+  }
+  .sub-options .number-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sub-options .number-row label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--brown);
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    margin-bottom: 0;
+    cursor: default;
+    width: auto;
+  }
+  .sub-options .candle-nums {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .sub-options .candle-nums input[type="text"] {
+    width: 52px;
+    padding: 7px 10px;
+    font-size: 1rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+  .sub-options .candle-nums-label {
+    font-size: 0.78rem;
+    color: var(--brown-pale);
+    margin-top: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  /* --- Cake shape / size visual selector --- */
+  .size-selector,
+  .shape-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .size-selector,
+    .shape-selector { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .size-option {
+    position: relative;
+  }
+
+  .size-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .size-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 10px 12px;
+    border: 1.5px solid #e0d4b8;
+    border-radius: var(--radius);
+    background: #fffdf5;
+    cursor: pointer;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--brown);
+    text-transform: none;
+    letter-spacing: 0;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    min-height: 110px;
+  }
+
+  .size-option label:hover {
+    border-color: var(--brown-pale);
+    background: #fdf8ec;
+  }
+
+  .size-option input[type="radio"]:checked + label {
+    border-color: var(--brown);
+    background: #fdf3d8;
+    box-shadow: 0 0 0 2px rgba(92,51,23,0.15);
+  }
+
+  .size-option svg {
+    flex-shrink: 0;
+  }
+
+  /* --- Cake size preview --- */
+  #sizePreview {
+    margin-top: 14px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    border: 1.5px solid #e0d4b8;
+    display: none;
+    animation: fadeIn 0.22s ease;
+  }
+
+  #sizePreview.visible { display: block; }
+
+  #sizePreview svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Toast notification */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    background: var(--toast-bg);
+    color: var(--toast-fg);
+    padding: 0.85rem 1.4rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(92,51,23,0.30);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    max-width: calc(100vw - 2rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  #toast.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(-4px);
+  }
+  #toast .toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="form-wrap">
+
+  <!-- Success screen (hidden until submit) -->
+  <div class="success-screen" id="successScreen">
+    <h2>We got it — thank you!</h2>
+    <p>Your inquiry is in our inbox. We'll be in touch within 1 week. We can't wait to bake something beautiful for you!</p>
+    <button onclick="window.location.reload()" style="
+      margin-top: 24px;
+      background: transparent;
+      border: 1.5px solid var(--brown);
+      color: var(--brown);
+      font-family: 'Recoleta', Georgia, serif;
+      font-size: 0.9rem;
+      padding: 10px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+    ">Submit another inquiry</button>
+  </div>
+
+  <div class="form-body" id="formBody">
+
+    <!-- Date alert banners -->
+    <div class="date-alert too-soon" id="alertTooSoon">
+      <strong>We need at least one week's notice for custom cakes!</strong>
+      Unfortunately we can't take custom orders with less than 7 days notice — but don't worry, we've got you covered!
+      Our <a href="https://www.cakeforbreakfast.ca/s/shop" target="_blank">Online Cake Shop</a> has delicious options available with just 2 days notice.
+    </div>
+
+    <div class="date-alert closed-day" id="alertClosedDay">
+      <strong><span id="alertClosedDayText"></span></strong>
+    </div>
+
+    <form id="cakeForm" novalidate>
+
+      <!-- CONTACT -->
+      <div class="card">
+        <div class="card-title">Your Details</div>
+
+        <div class="field">
+          <label>Full name (first and last!) <span class="req">*</span></label>
+          <input type="text" name="fullName" required placeholder="Jane Smith" autocomplete="name">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" name="email" required placeholder="jane@email.com" autocomplete="email">
+          </div>
+          <div class="field">
+            <label>Phone number <span class="req">*</span></label>
+            <input type="tel" name="phone" required placeholder="250-555-0100" autocomplete="tel">
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT DATE — always visible, validation fires here -->
+      <div class="card">
+        <div class="card-title">Event Date &amp; Time</div>
+
+        <div class="field">
+          <label>Event date <span class="req">*</span></label>
+          <input type="date" name="eventDate" id="eventDate" required>
+        </div>
+
+        <!-- Rest of this card is blocked when date is invalid -->
+        <div id="dateGatedFields">
+          <div class="field">
+            <label>Event time <span class="req">*</span> <span class="hint">Approximate is fine</span></label>
+            <select name="eventTime" required>
+              <option value="" disabled selected>— select a time —</option>
+              <option>6:00 AM</option>
+              <option>7:00 AM</option>
+              <option>8:00 AM</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+              <option>5:00 PM</option>
+              <option>6:00 PM</option>
+              <option>7:00 PM</option>
+              <option>8:00 PM</option>
+              <option>9:00 PM</option>
+              <option>10:00 PM</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAKE DETAILS — blocked when date invalid -->
+      <div id="mainForm">
+
+        <div class="card">
+          <div class="card-title">About Your Cake</div>
+
+          <div class="field">
+            <label>What is this cake for? <span class="req">*</span></label>
+            <input type="text" name="cakeFor" required placeholder="e.g. Wedding, Birthday, Anniversary..." autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label>Flavour <span class="req">*</span></label>
+            <div class="radio-group" id="flavourGroup">
+              <label><input type="radio" name="flavour" value="Brown Butter Pecan" required>
+                <span><span class="flavour-name">Brown Butter Pecan</span><span class="flavour-desc">brown butter pecan cake · vanilla milk soak · caramel praline fudge · whipped white chocolate cream filling · toasted pecans · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Chocolate Lover's">
+                <span><span class="flavour-name">Chocolate Lover's</span><span class="flavour-desc">salted chocolate cake · chocolate milk soak · milk chocolate cremeux · chocolate fudge · chocolate cookie crunch · chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Classic Confetti Crunch">
+                <span><span class="flavour-name">Classic Confetti Crunch</span><span class="flavour-desc">confetti sprinkle cake · vanilla milk soak · cake batter frosting · confetti crunch crumb · sprinkles · vanilla bean buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Carrot, Caramel, Cream Cheese">
+                <span><span class="flavour-name">Carrot, Caramel, Cream Cheese</span><span class="flavour-desc">spiced carrot cake · vanilla bean milk soak · whipped white chocolate cream cheese filling · salted caramel · walnut praline · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Pistachio, Lemon & Matcha">
+                <span><span class="flavour-name">Pistachio, Lemon &amp; Matcha</span><span class="flavour-desc">pistachio matcha cake · lemon syrup soak · pistachio cremeux · lemon cream · milk cookie crumb · pistachio matcha white chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Red Velvet Raspberry">
+                <span><span class="flavour-name">Red Velvet Raspberry</span><span class="flavour-desc">rich red velvet cake · vanilla bean milk soak · whipped white chocolate cream cheese frosting filling · raspberry puree · vanilla bean buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Strawberry Lemon">
+                <span><span class="flavour-name">Strawberry Lemon</span><span class="flavour-desc">lemon poppyseed cake · lemon syrup soak · strawberry compote · fresh berries · lemon cream · crunchy milk crumb · strawberry buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Vanilla Bean & Salted Caramel">
+                <span><span class="flavour-name">Vanilla Bean &amp; Salted Caramel</span><span class="flavour-desc">vanilla bean cake · vanilla milk soak · vanilla bean cremeux · milk cookie crumb · salted caramel · vanilla bean white chocolate buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Pumpkin Spice Cake">
+                <span><span class="flavour-name">Pumpkin Spice Cake <em style="font-style:italic;font-weight:400;color:var(--brown-pale);font-size:0.8em;">seasonal!</em></span><span class="flavour-desc">pumpkin cake · vanilla milk soak · milk cookie crumb · salted caramel · whipped white chocolate cream cheese filling · brown butter buttercream</span></span>
+              </label>
+              <label><input type="radio" name="flavour" value="Custom (described below)">
+                <span><span class="flavour-name">I've got a custom flavour in mind...</span><span class="flavour-desc">describe it in the notes below!</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Any allergies or dietary restrictions? <span class="req">*</span></label>
+            <input type="text" name="allergies" required placeholder="e.g. gluten-free, nut allergy, vegan..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Cake Style &amp; Size</div>
+
+          <div class="field">
+            <label>Cake shape <span class="req">*</span></label>
+            <div class="shape-selector" id="shapeSelectorGroup">
+
+              <!-- Round -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeRound" value="Round" required>
+                <label for="shapeRound">
+                  <!-- Round cake side view — outline only -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- cake body: left wall, bottom arc, right wall -->
+                    <path d="M 8 16 L 8 38 A 18 5.5 0 0 0 44 38 L 44 16" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- top ellipse -->
+                    <ellipse cx="26" cy="16" rx="18" ry="5.5" stroke="#8b5a2b" stroke-width="1.5"/>
+                  </svg>
+                  Round
+                </label>
+              </div>
+
+              <!-- Heart -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeHeart" value="Heart">
+                <label for="shapeHeart">
+                  <!--
+                    Heart top profile: built from the same HEART_BEZ control points as the visualizer.
+                    Normalised coords → scaled to cx=26, cy=20, rx=17, ry=13 (top face)
+                    Then front wall drops 9px to make cake body.
+                    Path goes: top-centre → right lobe → right-bottom → centre-bottom → left-bottom → left lobe → back to top-centre
+                  -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- top heart face — same bezier as HEART_BEZ, scaled cx=26 cy=20 rx=17 ry=13 -->
+                    <path d="M26,7
+                      C31.1,7 35.7,9.3 38.5,13.0
+                      C41.6,17.1 41.4,22.7 38.2,26.6
+                      C35.3,30.2 31.3,33.2 26,37
+                      C20.7,33.2 16.7,30.2 13.8,26.6
+                      C10.6,22.7 10.4,17.1 13.5,13.0
+                      C16.3,9.3 20.9,7 26,7Z"
+                      stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- front wall: left side, bottom edge, right side — drops 8px -->
+                    <path d="M13.8,26.6 C13.0,30.0 17.5,36.5 26,45
+                             C34.5,36.5 39.0,30.0 38.2,26.6"
+                      stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                  </svg>
+                  Heart
+                </label>
+              </div>
+
+              <!-- Sheet -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeSheet" value="Sheet">
+                <label for="shapeSheet">
+                  <!-- Sheet cake — perspective view, all within 52×52 -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- front face -->
+                    <rect x="5" y="24" width="34" height="18" rx="1" stroke="#8b5a2b" stroke-width="1.5"/>
+                    <!-- top face (parallelogram) -->
+                    <path d="M5 24 L13 15 L47 15 L39 24 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- right side face -->
+                    <path d="M39 24 L47 15 L47 33 L39 42 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                  </svg>
+                  Sheet
+                </label>
+              </div>
+
+              <!-- Not sure -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeUnsure" value="Not sure — help me!">
+                <label for="shapeUnsure">
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="26" cy="44" rx="16" ry="4.5" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <rect x="10" y="26" width="32" height="18" rx="2" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <ellipse cx="26" cy="26" rx="16" ry="4.5" fill="none" stroke="#8b5a2b" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    <text x="26" y="21" text-anchor="middle" font-size="16" font-weight="700" fill="#8b5a2b" font-family="Georgia, serif">?</text>
+                  </svg>
+                  Not sure — help me!
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="field" id="sizeField">
+            <label>Size <span class="req">*</span> <span class="hint" id="sizeHint">Select a shape above first</span></label>
+            <select name="cakeSize" id="cakeSizeSelect" required disabled>
+              <option value="" disabled selected>— select a shape first —</option>
+            </select>
+            <div id="sizePreview"></div>
+          </div>
+
+          <div class="field">
+            <label>How would you describe yourself? <span class="req">*</span></label>
+            <select name="describeYourself" required>
+              <option value="" disabled selected>How would you describe yourself? *</option>
+              <option>I'd be happy to give you free reign on design after explaining the feel of my event!</option>
+              <option>I don't really know what I'm after, suggestions and advice welcome!</option>
+              <option>I have a fair idea of the design I'm after, but would love some design advice.</option>
+              <option>I know exactly what design I'm after and I have pictures to show you!</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Tell us a little bit about what you're looking for... <span class="hint">(aesthetic, colour, garnishes, etc.)</span></label>
+            <textarea name="aesthetic" placeholder="Dreamy buttercream, dried flowers, sage green tones..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Inspiration photos <span class="hint">Up to 6 images — drag &amp; drop or click to browse</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="photoInput" accept="image/*" multiple>
+              <p><span class="upload-cta">Click to upload</span> or drag &amp; drop your inspo photos here</p>
+              <p class="upload-sub">JPG, PNG, HEIC, WEBP · Max 10MB each · Up to 6 photos</p>
+            </div>
+            <div class="photo-previews" id="photoPreviews"></div>
+            <div class="photo-count" id="photoCount"></div>
+          </div>
+
+          <div class="field">
+            <label>Anything else you'd like to ask or tell us?</label>
+            <textarea name="anythingElse" placeholder="Go for it!"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">The Extras</div>
+
+          <div class="field">
+            <label>Interested in any extra fun cake garnishes? <span class="req">*</span></label>
+            <div class="check-group" id="garnishGroup">
+              <div class="garnish-item">
+                <label id="flowersLabel"><input type="checkbox" name="garnishes" value="Flowers" id="garnishFlowers"> Flowers (prices vary)</label>
+                <div class="sub-options" id="flowersSizeOptions">
+                  <div class="sub-label">Flower size</div>
+                  <div class="radio-group">
+                    <label><input type="radio" name="flowerSize" value="Small"> Small</label>
+                    <label><input type="radio" name="flowerSize" value="Medium"> Medium</label>
+                    <label><input type="radio" name="flowerSize" value="Large"> Large</label>
+                    <label><input type="radio" name="flowerSize" value="Not sure yet"> Not sure yet</label>
+                  </div>
+                </div>
+              </div>
+              <div class="garnish-item">
+                <label id="candlesLabel"><input type="checkbox" name="garnishes" value="Birthday Candles" id="garnishCandles"> Birthday Candles</label>
+                <div class="sub-options" id="candleTypeOptions">
+                  <div class="sub-label">Candle type</div>
+                  <div class="radio-group" id="candleTypeGroup">
+                    <label><input type="radio" name="candleType" value="3 single candles ($3)"> 3 single candles ($3)</label>
+                    <label><input type="radio" name="candleType" value="Numbered candles ($2.50/ea)"> Numbered candles ($2.50/ea)</label>
+                  </div>
+                  <div id="candleNumbersField" style="display:none; margin-top:8px;">
+                    <div class="sub-label" style="margin-bottom:6px;">Which numbers? <span style="font-weight:400;text-transform:none;">(up to 3)</span></div>
+                    <div class="candle-nums">
+                      <input type="text" name="candleNum1" maxlength="2" placeholder="2" aria-label="First number">
+                      <input type="text" name="candleNum2" maxlength="2" placeholder="5" aria-label="Second number">
+                      <input type="text" name="candleNum3" maxlength="2" placeholder="" aria-label="Third number">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <label><input type="checkbox" name="garnishes" value="Birch Bar + Co Cake Topper"> Birch Bar + Co Cake Topper (prices vary, we can chat!)</label>
+              <label><input type="checkbox" name="garnishes" value="None"> None of the above</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Interested in pricing and details on other desserts to go with your cake? <span class="req">*</span></label>
+            <div class="radio-group" id="otherDessertsGroup">
+              <label><input type="radio" name="otherDesserts" value="Yes please!" required> Yes please!</label>
+              <label><input type="radio" name="otherDesserts" value="Just the cake thanks"> Just the cake thanks :)</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Interested in purchasing a cake stand?</label>
+            <div class="radio-group" id="cakeStandGroup">
+              <label><input type="radio" name="cakeStand" value="Yes, send me options!"> Yes, send me options!</label>
+              <label><input type="radio" name="cakeStand" value="No thanks"> No thanks</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pickup &amp; Delivery</div>
+
+          <div class="field">
+            <label>How would you like to get your cake? <span class="req">*</span></label>
+            <div class="radio-group" id="pickupGroup">
+              <label><input type="radio" name="pickup" value="Pickup" required> I can come pick it up</label>
+              <label><input type="radio" name="pickup" value="Delivery"> I would like a delivery quote (please add the venue address below!)</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>When would you like to pick up / have it delivered? <span class="req">*</span></label>
+            <div class="radio-group" id="pickupTimingGroup">
+              <label><input type="radio" name="pickupTiming" value="Same day as event" required> Same day as event</label>
+              <label><input type="radio" name="pickupTiming" value="The day before"> The day before</label>
+              <label><input type="radio" name="pickupTiming" value="Other"> Other</label>
+            </div>
+          </div>
+
+          <div class="field" id="deliveryAddressField" style="display:none">
+            <label>Address for delivery quote <span class="hint">Start typing — verified addresses will appear</span></label>
+            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off">
+          </div>
+
+          <div id="deliveryContactFields" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label>Delivery contact name</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="text" name="deliveryContactName" id="deliveryContactName" placeholder="Jane Smith" autocomplete="off" style="flex:1;">
+                  <button type="button" id="copyMyName" title="Use my name" style="
+                    flex-shrink:0;
+                    padding:10px 13px;
+                    background:var(--cream);
+                    border:1.5px solid #e0d4b8;
+                    border-radius:var(--radius);
+                    cursor:pointer;
+                    font-size:0.82rem;
+                    color:var(--brown);
+                    font-weight:600;
+                    white-space:nowrap;
+                    transition:border-color 0.15s,background 0.15s;
+                  ">Use mine</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Delivery contact phone</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="tel" name="deliveryContactPhone" id="deliveryContactPhone" placeholder="250-555-0100" autocomplete="off" style="flex:1;">
+                  <button type="button" id="copyMyPhone" title="Copy my phone number" style="
+                    flex-shrink:0;
+                    padding:10px 13px;
+                    background:var(--cream);
+                    border:1.5px solid #e0d4b8;
+                    border-radius:var(--radius);
+                    cursor:pointer;
+                    font-size:0.82rem;
+                    color:var(--brown);
+                    font-weight:600;
+                    white-space:nowrap;
+                    transition:border-color 0.15s,background 0.15s;
+                  ">Use mine</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">One Last Thing!</div>
+          <div class="field">
+            <label>How did you hear about us? <span class="req">*</span></label>
+            <div class="check-group two-col" id="heardGroup">
+              <label><input type="checkbox" name="heardAbout" value="Instagram"> Instagram</label>
+              <label><input type="checkbox" name="heardAbout" value="Facebook"> Facebook</label>
+              <label><input type="checkbox" name="heardAbout" value="Friend / Family"> Friend / Family</label>
+              <label><input type="checkbox" name="heardAbout" value="Google"> Google</label>
+              <label><input type="checkbox" name="heardAbout" value="Saw your little truck!"> Saw your little truck!</label>
+              <label><input type="checkbox" name="heardAbout" value="Other"> Other</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="submit" id="submitBtn">Send My Inquiry</button>
+          <p class="submit-note">We'll be in touch within 1 week!</p>
+        </div>
+
+      </div><!-- /mainForm -->
+    </form>
+  </div><!-- /formBody -->
+</div><!-- /form-wrap -->
+
+<script>
+  const GOOGLE_FORM_ACTION = 'YOUR_GOOGLE_FORM_ACTION_URL_HERE';
+  // Replace above with your Google Form POST URL (see instructions in the guide)
+
+  const eventDateInput = document.getElementById('eventDate');
+  const alertTooSoon   = document.getElementById('alertTooSoon');
+  const alertClosedDay = document.getElementById('alertClosedDay');
+  const mainForm       = document.getElementById('mainForm');
+  const dateGated      = document.getElementById('dateGatedFields');
+  const submitBtn      = document.getElementById('submitBtn');
+
+  // Days closed for pickup: 0=Sun, 1=Mon, 2=Tue
+  const CLOSED_DAYS = [0, 1, 2];
+  const MIN_DAYS_NOTICE = 7;
+
+  // Set min date on the calendar to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  eventDateInput.setAttribute('min', todayStr);
+
+  function getDateState(dateStr) {
+    if (!dateStr) return 'empty';
+
+    // Parse as local date (avoid timezone shift)
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const selected = new Date(y, m - 1, d);
+    const today    = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
+    const dow = selected.getDay();
+
+    if (diffDays < MIN_DAYS_NOTICE) return 'too-soon';
+    if (CLOSED_DAYS.includes(dow)) return 'closed-day';
+    return 'valid';
+  }
+
+  function applyDateState(state) {
+    // Reset
+    eventDateInput.classList.remove('invalid', 'closed');
+    alertTooSoon.classList.remove('show');
+    alertClosedDay.classList.remove('show');
+    mainForm.classList.remove('section-blocked');
+    dateGated.classList.remove('section-blocked');
+    submitBtn.disabled = false;
+
+    if (state === 'empty') {
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      return;
+    }
+
+    if (state === 'too-soon') {
+      eventDateInput.classList.add('invalid');
+      alertTooSoon.classList.add('show');
+      alertClosedDay.classList.remove('show');
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      // Smooth scroll to alert
+      alertTooSoon.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    if (state === 'closed-day') {
+      const [y, m, d] = eventDateInput.value.split('-').map(Number);
+      const dow = new Date(y, m - 1, d).getDay();
+      const saturdayNudge = dow === 0 || dow === 1; // Sun or Mon only
+
+      const msg = saturdayNudge
+        ? 'We\'re closed for pickup on Sundays and Mondays. Did you know — many of our customers pick up their cakes on Saturday and absolutely rave about them! Try selecting a Wednesday, Thursday, Friday, or Saturday instead.'
+        : 'We\'re closed for pickup on Tuesdays. Please choose a Wednesday, Thursday, Friday, or Saturday instead.';
+
+      document.getElementById('alertClosedDayText').textContent = msg;
+      eventDateInput.classList.add('closed');
+      alertClosedDay.classList.add('show');
+      alertTooSoon.classList.remove('show');
+      mainForm.classList.add('section-blocked');
+      dateGated.classList.add('section-blocked');
+      submitBtn.disabled = true;
+      alertClosedDay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Valid — all good
+  }
+
+  // Initialise as blocked (no date chosen yet)
+  applyDateState('empty');
+
+  eventDateInput.addEventListener('change', function () {
+    applyDateState(getDateState(this.value));
+  });
+
+  // --- Radio / checkbox styling ---
+  document.querySelectorAll('.radio-group input[type="radio"]').forEach(input => {
+    input.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  // ─── Cake Size Visualizer (ported from cake_size_visualizer.html) ───────────
+
+  const VIZ_SIZES = [{"name":"Quarter Sheet (Short)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":3}]},{"name":"Quarter Sheet (Standard)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":5}]},{"name":"Half Sheet","shape":"sheet","party":40,"wedding":null,"tiers":[{"s":"sheet","w":16.5,"l":11.5,"h":5}]},{"name":"Full Sheet","shape":"sheet","party":80,"wedding":null,"tiers":[{"s":"sheet","w":33,"l":11.5,"h":5}]},{"name":"6\" Short","shape":"round","party":8,"wedding":10,"tiers":[{"s":"round","d":6,"h":3}]},{"name":"6\" Standard","shape":"round","party":12,"wedding":15,"tiers":[{"s":"round","d":6,"h":5}]},{"name":"7\" Short","shape":"round","party":12,"wedding":16,"tiers":[{"s":"round","d":7,"h":3}]},{"name":"7\" Standard","shape":"round","party":15,"wedding":20,"tiers":[{"s":"round","d":7,"h":5}]},{"name":"8\" Short","shape":"round","party":16,"wedding":20,"tiers":[{"s":"round","d":8,"h":3}]},{"name":"8\" Standard","shape":"round","party":20,"wedding":28,"tiers":[{"s":"round","d":8,"h":5}]},{"name":"9\" Short","shape":"round","party":20,"wedding":30,"tiers":[{"s":"round","d":9,"h":3}]},{"name":"9\" Standard","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":9,"h":5}]},{"name":"10\" Short","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":10,"h":3}]},{"name":"12\" Short","shape":"round","party":40,"wedding":50,"tiers":[{"s":"round","d":12,"h":3}]},{"name":"10\" Standard","shape":"round","party":40,"wedding":54,"tiers":[{"s":"round","d":10,"h":5}]},{"name":"12\" Standard","shape":"round","party":54,"wedding":74,"tiers":[{"s":"round","d":12,"h":5}]},{"name":"Two Tier: Std 8in + Std 6in","shape":"round","party":32,"wedding":43,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 6in","shape":"round","party":44,"wedding":55,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 7in","shape":"round","party":47,"wedding":60,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 7in","shape":"round","party":55,"wedding":74,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 8in","shape":"round","party":60,"wedding":82,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 8in","shape":"round","party":74,"wedding":102,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 9in","shape":"round","party":86,"wedding":114,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5}]},{"name":"Two Tier: Std 12in + Std 10in","shape":"round","party":94,"wedding":128,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5}]},{"name":"Three Tier: Std 8in + short 7in + Std 6in","shape":"round","party":44,"wedding":59,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":7,"h":3},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 10in + Std 8in + Short 6in","shape":"round","party":68,"wedding":92,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":3}]},{"name":"Three Tier: Std 10in + Std 8in + Std 6in","shape":"round","party":72,"wedding":97,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 8in + Std 6in","shape":"round","party":86,"wedding":117,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 9in + Std 7in","shape":"round","party":101,"wedding":134,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Three Tier: Std 12in + Short 10in + Std 8in","shape":"round","party":106,"wedding":142,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":3},{"s":"round","d":8,"h":5}]},{"name":"Three Tier: Std 12in + Std 10in + Std 8in","shape":"round","party":114,"wedding":156,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Four Tier: Std 12in + Std 10in + Std 8in + Std 6in","shape":"round","party":126,"wedding":171,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"6\" Short heart","shape":"heart","party":6,"wedding":8,"tiers":[{"s":"heart","d":6,"h":3}]},{"name":"6\" heart standard","shape":"heart","party":9,"wedding":12,"tiers":[{"s":"heart","d":6,"h":5}]},{"name":"8\" Short heart","shape":"heart","party":12,"wedding":16,"tiers":[{"s":"heart","d":8,"h":3}]},{"name":"8\" heart standard","shape":"heart","party":15,"wedding":20,"tiers":[{"s":"heart","d":8,"h":5}]},{"name":"9\" Short heart","shape":"heart","party":18,"wedding":24,"tiers":[{"s":"heart","d":9,"h":3}]},{"name":"9\" Heart standard","shape":"heart","party":21,"wedding":28,"tiers":[{"s":"heart","d":9,"h":5}]},{"name":"Two Tier: Heart 9in + Heart 6in","shape":"heart","party":32,"wedding":40,"tiers":[{"s":"heart","d":9,"h":5},{"s":"heart","d":6,"h":5}]}];
+
+  // Drawing engine constants
+  const VIZ_PX_MAX = 26, VIZ_ELL = 0.17, VIZ_ELL_HEART = 0.46, VIZ_STROKE = 1.6;
+  const VIZ_W = 760, VIZ_H = 460, VIZ_PAD = 34, VIZ_TEXT_W = 190;
+  const HEART_BEZ = [
+    [ 0.00,-1.00],
+    [ 0.30,-0.80,  0.93,-0.30,  1.00, 0.14],
+    [ 1.06, 0.55,  0.84, 0.94,  0.48, 0.94],
+    [ 0.21, 0.94,  0.06, 0.72,  0.00, 0.46],
+    [-0.06, 0.72, -0.21, 0.94, -0.48, 0.94],
+    [-0.84, 0.94, -1.06, 0.55, -1.00, 0.14],
+    [-0.93,-0.30, -0.30,-0.80,  0.00,-1.00]
+  ];
+  const HEART_SEG = 16;
+  let HEART_CACHE = null;
+
+  function heartUnit() {
+    if (HEART_CACHE) return HEART_CACHE;
+    const p = [];
+    let [px0, py0] = HEART_BEZ[0];
+    p.push([px0, py0]);
+    for (let s = 1; s < HEART_BEZ.length; s++) {
+      const [c1x,c1y,c2x,c2y,ex,ey] = HEART_BEZ[s];
+      for (let j = 1; j <= HEART_SEG; j++) {
+        const u = j/HEART_SEG, v = 1-u;
+        p.push([ v*v*v*px0 + 3*v*v*u*c1x + 3*v*u*u*c2x + u*u*u*ex,
+                 v*v*v*py0 + 3*v*v*u*c1y + 3*v*u*u*c2y + u*u*u*ey ]);
+      }
+      px0 = ex; py0 = ey;
+    }
+    const xs = p.map(q=>q[0]), ys = p.map(q=>q[1]);
+    const x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+    const mx=(x0+x1)/2, my=(y0+y1)/2, sx=2/(x1-x0), sy=2/(y1-y0);
+    HEART_CACHE = p.map(q=>[ (q[0]-mx)*sx, (q[1]-my)*sy ]);
+    return HEART_CACHE;
+  }
+
+  function heartPts(cx, cy, rx, ry) {
+    return heartUnit().map(u => [ cx + u[0]*rx, cy - u[1]*ry ]);
+  }
+
+  const ptsPath = p => 'M ' + p.map(q=>`${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(' L ') + ' Z';
+
+  function heartWall(cx, yT, rx, ry, hh) {
+    const p = heartPts(cx, yT, rx, ry);
+    let iMin = 0, iMax = 0;
+    p.forEach((q,i) => { if (q[0] < p[iMin][0]) iMin = i; if (q[0] > p[iMax][0]) iMax = i; });
+    const walk = (a, b) => { const out = []; for (let i = a; ; i = (i+1) % p.length){ out.push(p[i]); if (i === b) break; } return out; };
+    const armA = walk(iMax, iMin), armB = walk(iMin, iMax).reverse();
+    const deep = arr => Math.max(...arr.map(q=>q[1]));
+    const front = deep(armA) >= deep(armB) ? armA : armB;
+    const top = front.map(q=>`${q[0].toFixed(2)} ${q[1].toFixed(2)}`).join(' L ');
+    const bot = front.slice().reverse().map(q=>`${q[0].toFixed(2)} ${(q[1]+hh).toFixed(2)}`).join(' L ');
+    return `M ${top} L ${bot} Z`;
+  }
+
+  function vizEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+
+  function drawSheetCake(size) {
+    // Draws a rectangular sheet cake in isometric-ish perspective
+    const t = size.tiers[0]; // sheet cakes are always single-tier
+    const W = VIZ_W, H = VIZ_H;
+    // Scale the cake to fit nicely in the left ~570px of the canvas
+    const drawW = W - VIZ_TEXT_W - VIZ_PAD*2 - 60;
+    const drawH = H - VIZ_PAD*2 - 60;
+    // px per inch: fit both width+length in drawing area
+    // perspective skew: depth shows at 35deg
+    const skewX = 0.6, skewY = 0.35; // depth vector per unit length
+    const px = Math.min(
+      drawW / (t.w + t.l * skewX + 10),
+      drawH / (t.h + t.l * skewY + 4)
+    );
+    const fw = t.w * px;  // front face width
+    const fh = t.h * px;  // cake height in px
+    const dl = t.l * px;  // depth length in px
+    const dx = dl * skewX; // depth x-offset
+    const dy = dl * skewY; // depth y-offset (upward = negative)
+
+    // Front-bottom-left corner
+    const ox = VIZ_PAD + 24;
+    const oy = H - VIZ_PAD - 18;
+
+    // Key corners:
+    // front face: BL(ox,oy) → BR(ox+fw,oy) → TR(ox+fw,oy-fh) → TL(ox,oy-fh)
+    // back/top-depth: TL goes to TL+depth = (ox+dx, oy-fh-dy)
+    const BL = [ox,           oy          ];
+    const BR = [ox+fw,        oy          ];
+    const TR = [ox+fw,        oy-fh       ];
+    const TL = [ox,           oy-fh       ];
+    const TL2= [ox+dx,        oy-fh-dy    ]; // back-top-left
+    const TR2= [ox+fw+dx,     oy-fh-dy    ]; // back-top-right
+    const BR2= [ox+fw+dx,     oy-dy       ]; // back-bottom-right
+
+    const pt = (p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+
+    // Front face
+    const frontFace = `<path d="M${pt(BL)} L${pt(BR)} L${pt(TR)} L${pt(TL)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+    // Top face
+    const topFace   = `<path d="M${pt(TL)} L${pt(TR)} L${pt(TR2)} L${pt(TL2)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+    // Right side face
+    const rightFace = `<path d="M${pt(TR)} L${pt(TR2)} L${pt(BR2)} L${pt(BR)} Z" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+
+    // Board under cake (thin slab)
+    const brd = 6;
+    const BBL = [BL[0]-brd, BL[1]+brd*0.3];
+    const BBR = [BR[0]+brd, BR[1]+brd*0.3];
+    const BBR2= [BR2[0]+brd, BR2[1]+brd*0.3];
+    const boardTop = `<path d="M${pt(BBL)} L${pt(BBR)} L${pt(BBR2)} L${pt([TL2[0]+brd, TL2[1]+brd*0.3])} L${pt([TL2[0]-brd, TL2[1]+brd*0.3])} Z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/>`;
+
+    // Dimension arrows helper
+    const A = (x1,y1,x2,y2) =>
+      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
+
+    // Width arrow along front bottom
+    const wmx = (BL[0]+BR[0])/2, wmy = oy + 22;
+    const widthArrow = A(BL[0], wmy, BR[0], wmy)
+      + `<line x1="${BL[0]}" y1="${oy+2}" x2="${BL[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
+      + `<line x1="${BR[0]}" y1="${oy+2}" x2="${BR[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
+      + `<rect x="${wmx-22}" y="${wmy-9}" width="44" height="14" fill="#fff"/>`
+      + `<text x="${wmx}" y="${wmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.w}"</text>`;
+
+    // Height arrow along front-right edge
+    const hmx = TR[0] + 20, hmy = (TR[1]+BR[1])/2;
+    const heightArrow = A(hmx, TR[1], hmx, BR[1])
+      + `<line x1="${TR[0]+1}" y1="${TR[1]}" x2="${hmx+4}" y2="${TR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
+      + `<line x1="${BR[0]+1}" y1="${BR[1]}" x2="${hmx+4}" y2="${BR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
+      + `<text x="${hmx+9}" y="${hmy+4}" font-size="12.5" fill="#000">${t.h}"</text>`;
+
+    // Length arrow along top-right edge (TR → TR2)
+    const lmx = (TR[0]+TR2[0])/2 + 6, lmy = (TR[1]+TR2[1])/2 - 10;
+    const lengthArrow = A(TR[0], TR[1], TR2[0], TR2[1])
+      + `<rect x="${lmx-18}" y="${lmy-9}" width="36" height="14" fill="#fff"/>`
+      + `<text x="${lmx}" y="${lmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.l}"</text>`;
+
+    // Serves panel (right side)
+    const tx = W - VIZ_TEXT_W - VIZ_PAD + 26, ty = H/2;
+    const lo = size.party;
+    const big = lo ? `~${lo}` : '—';
+    const fs  = 54;
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="#000">${big}</text>`
+              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">party portions</text>`
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+
+    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
+    const spec  = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${t.w}" × ${t.l}" × ${t.h}"</text>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
+<rect width="${W}" height="${H}" fill="#fff"/>
+<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
+${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heightArrow}${lengthArrow}${txt}</svg>`;
+  }
+
+  function drawCake(size) {
+    if (size.shape === 'sheet') return drawSheetCake(size);
+    const tiers = size.tiers;
+    const ell = (size.shape === 'heart') ? VIZ_ELL_HEART : VIZ_ELL;
+    const maxD = Math.max(...tiers.map(t=>t.d));
+    const totH = tiers.reduce((a,t)=>a+t.h,0);
+    const availW = VIZ_W - VIZ_TEXT_W - VIZ_PAD*2 - 90;
+    const availH = VIZ_H - VIZ_PAD*2 - 60;
+    const px = Math.min(VIZ_PX_MAX, availW/maxD, availH/(totH + maxD*ell*2));
+
+    const cx = VIZ_PAD + 60 + (maxD*px)/2;
+    const topLimit = VIZ_PAD + 44, botLimit = VIZ_H - VIZ_PAD - 6;
+    const topRy = (tiers[tiers.length-1].d*px/2)*ell;
+    const boardRy = (maxD*px/2 + 20)*ell;
+    const drawH = totH*px + topRy + boardRy;
+    const baseY = Math.min(botLimit - boardRy, topLimit + topRy + (botLimit - topLimit - drawH)/2 + totH*px);
+
+    let body = '', dims = '';
+    const A = (x1,y1,x2,y2) =>
+      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
+
+    let y = baseY;
+    const geo = [];
+    tiers.forEach(t => {
+      const rx = t.d*px/2, ry = rx*ell, hh = t.h*px;
+      geo.push({ t, shape: t.s || 'round', rx, ry, hh, yB: y, yT: y - hh });
+      y -= hh;
+    });
+
+    const bot = geo[0];
+    const bR = bot.rx + (bot.shape === 'heart' ? 20 : 16), bRy = bR*ell;
+    body += `<ellipse cx="${cx}" cy="${baseY}" rx="${bR}" ry="${bRy}" fill="#fff" stroke="#000" stroke-width="1.1"/>`;
+
+    geo.forEach(g => {
+      if (g.shape === 'heart') {
+        body += `<path d="${heartWall(cx, g.yT, g.rx, g.ry, g.hh)}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+        body += `<path d="${ptsPath(heartPts(cx, g.yT, g.rx, g.ry))}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+      } else {
+        body += `<path d="M ${cx-g.rx} ${g.yT} L ${cx-g.rx} ${g.yB} A ${g.rx} ${g.ry} 0 0 0 ${cx+g.rx} ${g.yB} L ${cx+g.rx} ${g.yT}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}" stroke-linejoin="round"/>`;
+        body += `<ellipse cx="${cx}" cy="${g.yT}" rx="${g.rx}" ry="${g.ry}" fill="#fff" stroke="#000" stroke-width="${VIZ_STROKE}"/>`;
+      }
+    });
+
+    geo.forEach(g => {
+      const my = (g.yT + g.yB)/2 + g.ry*0.3;
+      dims += A(cx-g.rx+1, my, cx+g.rx-1, my);
+      dims += `<rect x="${cx-22}" y="${my-9}" width="44" height="14" fill="#fff"/>`;
+      dims += `<text x="${cx}" y="${my-1}" text-anchor="middle" font-size="12.5" font-family="inherit" fill="#000">${g.t.d}"</text>`;
+    });
+
+    const hx = cx + Math.max(...geo.map(g=>g.rx)) + 34;
+    geo.forEach(g => {
+      dims += `<line x1="${cx+g.rx}" y1="${g.yT}" x2="${hx+7}" y2="${g.yT}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
+      dims += A(hx, g.yT, hx, g.yB);
+      dims += `<text x="${hx+9}" y="${(g.yT+g.yB)/2+4}" font-size="12.5" fill="#000">${g.t.h}"</text>`;
+    });
+    dims += `<line x1="${cx+bot.rx}" y1="${baseY}" x2="${hx+7}" y2="${baseY}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
+
+    const tx = VIZ_W - VIZ_TEXT_W - VIZ_PAD + 26, ty = VIZ_H/2;
+    const lo = size.party, hi = size.wedding;
+    const none = (lo == null && hi == null);
+    const both = (lo != null && hi != null && lo !== hi);
+    const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
+    const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
+    const cap  = none ? 'contact us for details'
+               : both ? 'party to wedding portions'
+               : (hi != null ? 'wedding portions' : 'party portions');
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
+              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">${cap}</text>`
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+
+    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
+    const spec  = tiers.map(t=>`${t.d}"${(t.s||'round')==='heart'?' heart':''} × ${t.h}"`).join('  +  ');
+    const sub   = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${spec}</text>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIZ_W} ${VIZ_H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
+<rect width="${VIZ_W}" height="${VIZ_H}" fill="#fff"/>
+<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
+${title}${sub}${body}${dims}${txt}</svg>`;
+  }
+
+  // ─── Shape → size dropdown (uses VIZ_SIZES as source of truth) ───────────
+
+  // Static options for shapes not covered by the visualizer
+  const STATIC_SIZES = {
+    'Not sure — help me!': [
+      { value: 'Not sure — help me decide!', label: 'Not sure — help me decide!' },
+    ],
+  };
+
+  const cakeSizeSelect = document.getElementById('cakeSizeSelect');
+  const sizeHint       = document.getElementById('sizeHint');
+  const sizePreview    = document.getElementById('sizePreview');
+
+  // Index VIZ_SIZES by option value for fast lookup on select change
+  const vizSizeByValue = {};
+
+  function buildSizeLabel(s) {
+    const lo = s.party, hi = s.wedding;
+    if (lo != null && hi != null && lo !== hi) return `${s.name}  ·  ${lo}–${hi} servings`;
+    if (hi != null) return `${s.name}  ·  ~${hi} servings`;
+    if (lo != null) return `${s.name}  ·  ~${lo} servings`;
+    return s.name;
+  }
+
+  document.querySelectorAll('input[name="cakeShape"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const shape = this.value;
+
+      // Clear preview
+      sizePreview.classList.remove('visible');
+      sizePreview.innerHTML = '';
+
+      // Rebuild dropdown
+      cakeSizeSelect.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value    = '';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      placeholder.textContent = '— choose a size —';
+      cakeSizeSelect.appendChild(placeholder);
+
+      if (shape === 'Round' || shape === 'Heart' || shape === 'Sheet') {
+        const shapeKey = shape.toLowerCase(); // 'round', 'heart', or 'sheet'
+        VIZ_SIZES
+          .filter(s => s.shape === shapeKey)
+          .forEach(s => {
+            const opt = document.createElement('option');
+            opt.value       = s.name;
+            opt.textContent = buildSizeLabel(s);
+            vizSizeByValue[s.name] = s;
+            cakeSizeSelect.appendChild(opt);
+          });
+      } else {
+        // Not sure — static options, no preview
+        const opts = STATIC_SIZES[shape] || [];
+        opts.forEach(o => {
+          const opt = document.createElement('option');
+          opt.value       = o.value;
+          opt.textContent = o.label;
+          cakeSizeSelect.appendChild(opt);
+        });
+      }
+
+      cakeSizeSelect.disabled = false;
+      cakeSizeSelect.required = true;
+      sizeHint.textContent    = '';
+    });
+  });
+
+  // Live SVG preview when a size is selected
+  cakeSizeSelect.addEventListener('change', function () {
+    const size = vizSizeByValue[this.value];
+    if (size) {
+      sizePreview.innerHTML = drawCake(size);
+      sizePreview.classList.add('visible');
+    } else {
+      sizePreview.classList.remove('visible');
+      sizePreview.innerHTML = '';
+    }
+  });
+
+  document.querySelectorAll('.check-group input[type="checkbox"]').forEach(input => {
+    input.addEventListener('change', function () {
+      this.closest('label').classList.toggle('checked', this.checked);
+    });
+  });
+
+  // --- Garnish sub-options ---
+  const garnishFlowers = document.getElementById('garnishFlowers');
+  const flowersSizeOptions = document.getElementById('flowersSizeOptions');
+  if (garnishFlowers && flowersSizeOptions) {
+    garnishFlowers.addEventListener('change', function () {
+      flowersSizeOptions.classList.toggle('visible', this.checked);
+    });
+  }
+
+  const garnishCandles = document.getElementById('garnishCandles');
+  const candleTypeOptions = document.getElementById('candleTypeOptions');
+  const candleNumbersField = document.getElementById('candleNumbersField');
+  if (garnishCandles && candleTypeOptions) {
+    garnishCandles.addEventListener('change', function () {
+      candleTypeOptions.classList.toggle('visible', this.checked);
+      if (!this.checked && candleNumbersField) {
+        candleNumbersField.style.display = 'none';
+        // Clear candle type selection
+        document.querySelectorAll('input[name="candleType"]').forEach(r => { r.checked = false; r.closest('label').classList.remove('selected'); });
+      }
+    });
+  }
+
+  // Show number inputs when "Numbered candles" is chosen
+  document.querySelectorAll('input[name="candleType"]').forEach(r => {
+    r.addEventListener('change', function () {
+      // Radio styling
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+      // Show number inputs only for numbered candles
+      if (candleNumbersField) {
+        candleNumbersField.style.display = (this.value === 'Numbered candles ($2.50/ea)') ? 'block' : 'none';
+      }
+    });
+  });
+
+  // Flower size radio styling
+  document.querySelectorAll('input[name="flowerSize"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  // Pickup timing radio styling
+  document.querySelectorAll('input[name="pickupTiming"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const group = this.closest('.radio-group');
+      if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+      this.closest('label').classList.add('selected');
+    });
+  });
+
+  // --- Show/hide delivery address + contact fields ---
+  document.querySelectorAll('input[name="pickup"]').forEach(r => {
+    r.addEventListener('change', function () {
+      const isDelivery = this.value === 'Delivery';
+      document.getElementById('deliveryAddressField').style.display  = isDelivery ? 'block' : 'none';
+      document.getElementById('deliveryContactFields').style.display = isDelivery ? 'block' : 'none';
+    });
+  });
+
+  // "Use mine" — name
+  document.getElementById('copyMyName').addEventListener('click', function () {
+    const myName = document.querySelector('input[name="fullName"]').value.trim();
+    const dest   = document.getElementById('deliveryContactName');
+    if (myName) {
+      dest.value = myName;
+      this.textContent = 'Copied!';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 1800);
+    } else {
+      this.textContent = 'Add your name above first';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 2200);
+    }
+  });
+
+  // "Use mine" — phone
+  document.getElementById('copyMyPhone').addEventListener('click', function () {
+    const myPhone = document.querySelector('input[name="phone"]').value.trim();
+    const dest    = document.getElementById('deliveryContactPhone');
+    if (myPhone) {
+      dest.value = myPhone;
+      this.textContent = 'Copied!';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 1800);
+    } else {
+      this.textContent = 'Add your phone above first';
+      setTimeout(() => { this.textContent = 'Use mine'; }, 2200);
+    }
+  });
+
+  // Phone validation helper — strips non-digits, checks for 10 or 11 digits
+  function isValidPhone(val) {
+    const digits = val.replace(/\D/g, '');
+    return digits.length === 10 || (digits.length === 11 && digits[0] === '1');
+  }
+
+  // --- Photo upload ---
+  const MAX_PHOTOS = 6;
+  const MAX_SIZE_MB = 10;
+  let uploadedFiles = []; // array of File objects
+
+  const uploadZone    = document.getElementById('uploadZone');
+  const photoInput    = document.getElementById('photoInput');
+  const photoPreviews = document.getElementById('photoPreviews');
+  const photoCount    = document.getElementById('photoCount');
+
+  function updatePhotoCount() {
+    if (uploadedFiles.length === 0) {
+      photoCount.textContent = '';
+    } else {
+      photoCount.textContent = `${uploadedFiles.length} / ${MAX_PHOTOS} photo${uploadedFiles.length !== 1 ? 's' : ''} added`;
+    }
+    // Hide drop zone if at max
+    uploadZone.style.display = uploadedFiles.length >= MAX_PHOTOS ? 'none' : '';
+  }
+
+  function addFiles(files) {
+    for (const file of files) {
+      if (uploadedFiles.length >= MAX_PHOTOS) {
+        alert(`You can upload a maximum of ${MAX_PHOTOS} photos.`);
+        break;
+      }
+      if (!file.type.startsWith('image/')) {
+        alert(`"${file.name}" is not an image file and was skipped.`);
+        continue;
+      }
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        alert(`"${file.name}" is larger than ${MAX_SIZE_MB}MB and was skipped.`);
+        continue;
+      }
+      // Avoid duplicates by name+size
+      const isDupe = uploadedFiles.some(f => f.name === file.name && f.size === file.size);
+      if (isDupe) continue;
+
+      uploadedFiles.push(file);
+      renderPreview(file, uploadedFiles.length - 1);
+    }
+    updatePhotoCount();
+  }
+
+  function renderPreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      item.dataset.index = index;
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+
+      const name = document.createElement('div');
+      name.className = 'file-name';
+      name.textContent = file.name;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '✕';
+      removeBtn.title = 'Remove photo';
+      removeBtn.addEventListener('click', () => removePhoto(file, item));
+
+      item.appendChild(img);
+      item.appendChild(name);
+      item.appendChild(removeBtn);
+      photoPreviews.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto(file, itemEl) {
+    uploadedFiles = uploadedFiles.filter(f => f !== file);
+    itemEl.style.animation = 'none';
+    itemEl.style.opacity = '0';
+    itemEl.style.transform = 'scale(0.85)';
+    itemEl.style.transition = 'opacity 0.18s, transform 0.18s';
+    setTimeout(() => itemEl.remove(), 180);
+    updatePhotoCount();
+  }
+
+  // Click to browse
+  photoInput.addEventListener('change', function() {
+    addFiles(Array.from(this.files));
+    this.value = ''; // reset so same file can be re-added after removal
+  });
+
+  // Drag and drop
+  uploadZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+  });
+
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('drag-over');
+  });
+
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+
+  // ---- Toast notification ----
+  let toastTimer = null;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ---- SUBMIT → Apps Script Web App ----
+  // Paste your deployed Web App URL here after following the setup guide
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby59wbLWwVEUy1aQNllSrkIK82zUmjv0BR2SfGvO_QVzu5wMzfIfDlhqKWU4rZgSaqF/exec';
+
+  document.getElementById('cakeForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Validation
+    const required = this.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(field => {
+      if (field.type === 'radio') {
+        const group = document.querySelectorAll(`input[name="${field.name}"]`);
+        if (![...group].some(r => r.checked)) {
+          valid = false;
+          field.closest('.radio-group').style.outline = '2px solid #e87c7c';
+        }
+      } else if (!field.value.trim()) {
+        valid = false;
+        field.style.borderColor = '#e87c7c';
+        field.addEventListener('input', () => field.style.borderColor = '', { once: true });
+      }
+    });
+
+    // Phone number format check
+    const phoneField = document.querySelector('input[name="phone"]');
+    if (phoneField.value.trim() && !isValidPhone(phoneField.value)) {
+      valid = false;
+      phoneField.style.borderColor = '#e87c7c';
+      phoneField.addEventListener('input', () => phoneField.style.borderColor = '', { once: true });
+    }
+
+    if (!valid) {
+      // Scroll to first invalid field
+      const firstBad = document.querySelector('.radio-group[style*="outline"], input[style*="border-color"], select[style*="border-color"], textarea[style*="border-color"]');
+      if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const isPhoneBad = phoneField.style.borderColor === 'rgb(232, 124, 124)';
+      showToast(isPhoneBad ? 'Please enter a valid 10-digit phone number.' : 'Please fill in all required fields before submitting.');
+      return;
+    }
+
+    // Show sending state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    const data = new FormData(this);
+
+    // Convert each photo to base64 and append to form data
+    // Apps Script receives: photo_1_data (base64), photo_1_type, photo_1_name
+    await Promise.all(uploadedFiles.map((file, i) => new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        data.append(`photo_${i+1}_data`, ev.target.result); // includes data:image/...;base64, prefix
+        data.append(`photo_${i+1}_type`, file.type);
+        data.append(`photo_${i+1}_name`, file.name);
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    })));
+
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', body: data, mode: 'no-cors' });
+    } catch (err) {
+      // no-cors always triggers a TypeError on the response — submission still goes through
+      console.log('Submitted:', err.message);
+    }
+
+    // Show success
+    document.getElementById('formBody').classList.add('hidden');
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // --- Google Maps Places Autocomplete ---
+  // Initialises once the Maps API has loaded
+  function initAutocomplete() {
+    const input = document.getElementById('deliveryAddress');
+    if (!input || !window.google) return;
+
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      componentRestrictions: { country: 'ca' }, // Canada only
+      fields: ['formatted_address'],
+      types: ['address'],
+    });
+
+    // When user picks a suggestion, fill the field with the full formatted address
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place.formatted_address) {
+        input.value = place.formatted_address;
+      }
+    });
+  }
+
+  // Run after Maps API loads (the async defer means it may load after this script)
+  if (window.google && window.google.maps) {
+    initAutocomplete();
+  } else {
+    window.initAutocomplete = initAutocomplete;
+    // Re-point the Maps API callback if needed
+    const mapsScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    if (mapsScript) {
+      mapsScript.src = mapsScript.src.replace('async defer', '') + '&callback=initAutocomplete';
+    }
+  }
+</script>
+
+<div id="toast" role="alert" aria-live="assertive">
+  <span class="toast-icon">⚠️</span>
+  <span id="toast-msg">Please fill in all required fields.</span>
+</div>
+</body>
+</html>
