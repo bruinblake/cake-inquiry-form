@@ -1032,6 +1032,8 @@
             <select name="cakeSize" id="cakeSizeSelect" required disabled>
               <option value="" disabled selected>— select a shape first —</option>
             </select>
+            <!-- Hidden field so Apps Script receives portion counts alongside cakeSize -->
+            <input type="hidden" name="portions" id="portionsHidden" value="">
             <div id="sizePreview"></div>
           </div>
 
@@ -1638,9 +1640,20 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
     if (size) {
       sizePreview.innerHTML = drawCake(size);
       sizePreview.classList.add('visible');
+      // Populate hidden portions field for Apps Script
+      const portionsHidden = document.getElementById('portionsHidden');
+      if (portionsHidden) {
+        const lo = size.party, hi = size.wedding;
+        if (lo != null && hi != null && lo !== hi) portionsHidden.value = `${lo}–${hi} party to wedding`;
+        else if (hi != null) portionsHidden.value = `~${hi} wedding`;
+        else if (lo != null) portionsHidden.value = `~${lo} party`;
+        else portionsHidden.value = '';
+      }
     } else {
       sizePreview.classList.remove('visible');
       sizePreview.innerHTML = '';
+      const portionsHidden = document.getElementById('portionsHidden');
+      if (portionsHidden) portionsHidden.value = '';
     }
   });
 
