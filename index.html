@@ -1188,7 +1188,7 @@
 
           <div class="field" id="deliveryAddressField" style="display:none">
             <label>Address for delivery quote <span class="hint">Start typing — verified addresses will appear</span></label>
-            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off">
+            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
           </div>
 
           <div id="deliveryContactFields" style="display:none">
@@ -2025,7 +2025,7 @@ ${body}${dims}${txt}</svg>`;
 
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynytaITbkGJaQ3gngdjfK_gnMV6boTwPCjcJ7lyKXtNIM4FFlhMybikBk0k9hEh8mF/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwN9UGMVf_6Y9eSmTq5J-Yy7g8vIakD5hsBtVvNLfz5DsMmrZEukI57pMdGwYcYA-3f/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -2083,25 +2083,34 @@ ${body}${dims}${txt}</svg>`;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
 
-    const data = new FormData(this);
+    // Build payload as plain object from form fields
+    const formEl = this;
+    const payload = {};
+    new FormData(formEl).forEach((val, key) => {
+      // skip file inputs — handled separately as base64
+      if (typeof val === 'string') payload[key] = val;
+    });
 
-    // Convert each photo to base64 and append to form data
-    // Apps Script receives: photo_1_data (base64), photo_1_type, photo_1_name
+    // Convert each photo to base64
     await Promise.all(uploadedFiles.map((file, i) => new Promise(resolve => {
       const reader = new FileReader();
       reader.onload = ev => {
-        data.append(`photo_${i+1}_data`, ev.target.result); // includes data:image/...;base64, prefix
-        data.append(`photo_${i+1}_type`, file.type);
-        data.append(`photo_${i+1}_name`, file.name);
+        payload[`photo_${i+1}_data`] = ev.target.result;
+        payload[`photo_${i+1}_type`] = file.type;
+        payload[`photo_${i+1}_name`] = file.name;
         resolve();
       };
       reader.readAsDataURL(file);
     })));
 
     try {
-      await fetch(SCRIPT_URL, { method: 'POST', body: data, mode: 'no-cors' });
+      // Send as JSON — Apps Script doPost reads e.postData.contents
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        mode: 'no-cors'
+      });
     } catch (err) {
-      // no-cors always triggers a TypeError on the response — submission still goes through
       console.log('Submitted:', err.message);
     }
 
