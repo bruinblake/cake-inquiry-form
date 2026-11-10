@@ -6,8 +6,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
 <link href="https://fonts.cdnfonts.com/css/recoleta" rel="stylesheet">
-<!-- Replace YOUR_API_KEY with your Google Maps API key -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi2y27C4djRsgotqqA7GbxYavbiPZDhlY&libraries=places&region=CA&language=en&callback=initAutocomplete" async defer></script>
+<!-- Google Maps Places loaded only on non-artifact hosts; artifact CSP blocks it -->
+<script>
+(function(){
+  // Only load Maps API if running on a real domain (not an artifact iframe)
+  try {
+    if (window.top === window.self && !window.location.href.includes('claude.ai')) {
+      var s = document.createElement('script');
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDi2y27C4djRsgotqqA7GbxYavbiPZDhlY&libraries=places&region=CA&language=en&callback=initAutocomplete';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    }
+  } catch(e) {}
+})();
+</script>
 <style>
   :root {
     --cream: #fdf2c3;
@@ -1523,15 +1535,20 @@
     const BBR2= [BR2[0]+brd, BR2[1]+brd*0.3];
     const boardTop = `<path d="M${pt(BBL)} L${pt(BBR)} L${pt(BBR2)} L${pt([TL2[0]+brd, TL2[1]+brd*0.3])} L${pt([TL2[0]-brd, TL2[1]+brd*0.3])} Z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/>`;
 
-    // Serves panel (right side)
+    // Serves panel (right side) — mirrors round cake logic
     const tx = W - VIZ_TEXT_W - VIZ_PAD + 26, ty = H/2;
-    const lo = size.party;
-    const big = lo ? `~${lo}` : '—';
-    const fs  = 54;
+    const lo = size.party, hi = size.wedding;
+    const none = (lo == null && hi == null);
+    const both = (lo != null && hi != null && lo !== hi);
+    const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
+    const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
+    const servesCap = none ? 'contact us for details'
+                    : both ? 'party · wedding'
+                    : (hi != null ? 'wedding portions' : 'party portions');
     const priceDisplay = size.base ? `$${size.base.toLocaleString()}` : '$XX';
     const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
-              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="#000">${big}</text>`
-              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">party portions</text>`
+              + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
+              + `<text x="${tx}" y="${ty+48}" font-size="11" fill="#666">${servesCap}</text>`
               + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`
               + `<text x="${tx}" y="${ty+78}" font-size="10" fill="#888" letter-spacing="1.2">BASE PRICE</text>`
               + `<text x="${tx}" y="${ty+104}" font-size="28" font-weight="600" fill="#000">${priceDisplay}</text>`
@@ -1543,13 +1560,27 @@
     const SAH = 6;
     let sheetDims = '';
 
-    // Width arrow: horizontal below the front face bottom edge
+    // Length arrow: horizontal below the front face bottom edge — shows the LONG dimension (l)
     const wY = BL[1] + 20;
     const wMx = (BL[0]+BR[0])/2;
     sheetDims += `<line x1="${BL[0]}" y1="${wY}" x2="${BR[0]}" y2="${wY}" stroke="${SDC}" stroke-width="1.2"/>`
               + `<polygon points="${BL[0]},${wY} ${BL[0]+SAH},${wY-SAH/2} ${BL[0]+SAH},${wY+SAH/2}" fill="${SDC}"/>`
               + `<polygon points="${BR[0]},${wY} ${BR[0]-SAH},${wY-SAH/2} ${BR[0]-SAH},${wY+SAH/2}" fill="${SDC}"/>`
-              + `<text x="${wMx}" y="${wY+16}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.w}"</text>`;
+              + `<text x="${wMx}" y="${wY+16}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.l}"</text>`;
+
+    // Depth arrow: diagonal along the bottom-right receding edge (BR → BR2) — shows the WIDTH (w)
+    const dMx = (BR[0]+BR2[0])/2;
+    const dMy = (BR[1]+BR2[1])/2;
+    const dLen = Math.sqrt((BR2[0]-BR[0])**2+(BR2[1]-BR[1])**2);
+    const dUx = (BR2[0]-BR[0])/dLen, dUy = (BR2[1]-BR[1])/dLen; // unit vector along depth
+    const dNx = -dUy, dNy = dUx; // normal (perpendicular, offset outward)
+    const dOff = 14; // offset from edge
+    const dAx1 = BR[0]+dNx*dOff, dAy1 = BR[1]+dNy*dOff;
+    const dAx2 = BR2[0]+dNx*dOff, dAy2 = BR2[1]+dNy*dOff;
+    sheetDims += `<line x1="${dAx1.toFixed(1)}" y1="${dAy1.toFixed(1)}" x2="${dAx2.toFixed(1)}" y2="${dAy2.toFixed(1)}" stroke="${SDC}" stroke-width="1.2"/>`
+              + `<polygon points="${dAx1.toFixed(1)},${dAy1.toFixed(1)} ${(dAx1+dUx*SAH-dNx*SAH/2).toFixed(1)},${(dAy1+dUy*SAH-dNy*SAH/2).toFixed(1)} ${(dAx1+dUx*SAH+dNx*SAH/2).toFixed(1)},${(dAy1+dUy*SAH+dNy*SAH/2).toFixed(1)}" fill="${SDC}"/>`
+              + `<polygon points="${dAx2.toFixed(1)},${dAy2.toFixed(1)} ${(dAx2-dUx*SAH-dNx*SAH/2).toFixed(1)},${(dAy2-dUy*SAH-dNy*SAH/2).toFixed(1)} ${(dAx2-dUx*SAH+dNx*SAH/2).toFixed(1)},${(dAy2-dUy*SAH+dNy*SAH/2).toFixed(1)}" fill="${SDC}"/>`
+              + `<text x="${(dMx+dNx*16).toFixed(1)}" y="${(dMy+dNy*16+5).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.w}"</text>`;
 
     // Height arrow: vertical on the right side of the front face
     const hX = BR[0] + 20;
@@ -1987,7 +2018,7 @@ ${body}${dims}${txt}</svg>`;
 
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynytaITbkGJaQ3gngdjfK_gnMV6boTwPCjcJ7lyKXtNIM4FFlhMybikBk0k9hEh8mF/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby59wbLWwVEUy1aQNllSrkIK82zUmjv0BR2SfGvO_QVzu5wMzfIfDlhqKWU4rZgSaqF/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
