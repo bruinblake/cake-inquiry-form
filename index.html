@@ -1429,7 +1429,7 @@
 
   // Drawing engine constants
   const VIZ_PX_MAX = 26, VIZ_ELL = 0.17, VIZ_ELL_HEART = 0.46, VIZ_STROKE = 1.6;
-  const VIZ_W = 760, VIZ_H = 460, VIZ_PAD = 34, VIZ_TEXT_W = 190;
+  const VIZ_W = 760, VIZ_H = 285, VIZ_PAD = 20, VIZ_TEXT_W = 250;
   const HEART_BEZ = [
     [ 0.00,-1.00],
     [ 0.30,-0.80,  0.93,-0.30,  1.00, 0.14],
@@ -1504,9 +1504,10 @@
     const dx = dl * skewX; // depth x-offset
     const dy = dl * skewY; // depth y-offset (upward = negative)
 
-    // Front-bottom-left corner
+    // Front-bottom-left corner — centered vertically
     const ox = VIZ_PAD + 24;
-    const oy = H - VIZ_PAD - 18;
+    const totalDrawnH = fh + dy + 36; // cake body + depth rise + dim arrow+label below
+    const oy = (H - totalDrawnH) / 2 + fh + dy;
 
     // Key corners:
     // front face: BL(ox,oy) → BR(ox+fw,oy) → TR(ox+fw,oy-fh) → TL(ox,oy-fh)
@@ -1535,25 +1536,26 @@
     const BBR2= [BR2[0]+brd, BR2[1]+brd*0.3];
     const boardTop = `<path d="M${pt(BBL)} L${pt(BBR)} L${pt(BBR2)} L${pt([TL2[0]+brd, TL2[1]+brd*0.3])} L${pt([TL2[0]-brd, TL2[1]+brd*0.3])} Z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/>`;
 
-    // Serves panel (right side) — mirrors round cake logic
-    const tx = W - VIZ_TEXT_W - VIZ_PAD + 26, ty = H/2;
+    // Serves panel (right side) — top of SERVES aligns with top of cake image
+    const tx = W - VIZ_TEXT_W - VIZ_PAD + 26;
+    const ty = (oy - fh - dy) + 26; // SERVES baseline = top of cake
     const lo = size.party, hi = size.wedding;
     const none = (lo == null && hi == null);
     const both = (lo != null && hi != null && lo !== hi);
     const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
     const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
-    const servesCap = none ? 'contact us for details'
-                    : both ? 'party · wedding'
-                    : (hi != null ? 'wedding portions' : 'party portions');
     const priceDisplay = size.base ? `$${size.base.toLocaleString()}` : '$XX';
-    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+    const lineW = 230;
+    const priceX = tx + (priceDisplay.length * 26 * 0.58);
+    const designY = (ty + 112 - 26 * 0.33 + 13 * 0.35).toFixed(1);
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="16" font-weight="700" fill="#000" letter-spacing="2">SERVES</text>`
+              + `<line x1="${tx}" y1="${ty-14}" x2="${tx+lineW}" y2="${ty-14}" stroke="#000" stroke-width="1"/>`
               + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
-              + `<text x="${tx}" y="${ty+48}" font-size="11" fill="#666">${servesCap}</text>`
-              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`
-              + `<text x="${tx}" y="${ty+78}" font-size="10" fill="#888" letter-spacing="1.2">BASE PRICE</text>`
-              + `<text x="${tx}" y="${ty+104}" font-size="28" font-weight="600" fill="#000">${priceDisplay}</text>`
-              + `<text x="${tx}" y="${ty+122}" font-size="10" fill="#666">+ custom design</text>`
-              + `<text x="${tx}" y="${ty+136}" font-size="10" fill="#666">(estimate to follow)</text>`;
+              + `<text x="${tx}" y="${ty+72}" font-size="16" font-weight="700" fill="#000" letter-spacing="2">BASE PRICE</text>`
+              + `<line x1="${tx}" y1="${ty+83}" x2="${tx+lineW}" y2="${ty+83}" stroke="#000" stroke-width="1"/>`
+              + `<text x="${tx}" y="${ty+112}" font-size="26" fill="#000"><tspan font-weight="600">${priceDisplay}</tspan></text>`
+              + `<text x="${priceX}" y="${designY}" font-size="13" font-weight="400" fill="#333"> + custom design</text>`
+              + `<text x="${tx}" y="${ty+128}" font-size="11" fill="#666">(estimate to follow)</text>`;
 
     // Dimension annotations — arrows with labels, original style
     const SDC = '#c0392b';
@@ -1580,15 +1582,17 @@
     sheetDims += `<line x1="${dAx1.toFixed(1)}" y1="${dAy1.toFixed(1)}" x2="${dAx2.toFixed(1)}" y2="${dAy2.toFixed(1)}" stroke="${SDC}" stroke-width="1.2"/>`
               + `<polygon points="${dAx1.toFixed(1)},${dAy1.toFixed(1)} ${(dAx1+dUx*SAH-dNx*SAH/2).toFixed(1)},${(dAy1+dUy*SAH-dNy*SAH/2).toFixed(1)} ${(dAx1+dUx*SAH+dNx*SAH/2).toFixed(1)},${(dAy1+dUy*SAH+dNy*SAH/2).toFixed(1)}" fill="${SDC}"/>`
               + `<polygon points="${dAx2.toFixed(1)},${dAy2.toFixed(1)} ${(dAx2-dUx*SAH-dNx*SAH/2).toFixed(1)},${(dAy2-dUy*SAH-dNy*SAH/2).toFixed(1)} ${(dAx2-dUx*SAH+dNx*SAH/2).toFixed(1)},${(dAy2-dUy*SAH+dNy*SAH/2).toFixed(1)}" fill="${SDC}"/>`
-              + `<text x="${(dMx+dNx*16).toFixed(1)}" y="${(dMy+dNy*16+5).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.w}"</text>`;
+              + `<text x="${(dMx+dNx*28).toFixed(1)}" y="${(dMy+dNy*28+5).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.w}"</text>`;
 
-    // Height arrow: vertical on the right side of the front face
-    const hX = BR[0] + 20;
-    const hMy = (TR[1]+BR[1])/2;
-    sheetDims += `<line x1="${hX}" y1="${TR[1]}" x2="${hX}" y2="${BR[1]}" stroke="${SDC}" stroke-width="1.2"/>`
-              + `<polygon points="${hX},${TR[1]} ${hX-SAH/2},${TR[1]+SAH} ${hX+SAH/2},${TR[1]+SAH}" fill="${SDC}"/>`
-              + `<polygon points="${hX},${BR[1]} ${hX-SAH/2},${BR[1]-SAH} ${hX+SAH/2},${BR[1]-SAH}" fill="${SDC}"/>`
-              + `<text x="${hX+10}" y="${hMy+5}" text-anchor="start" font-size="15" font-weight="600" fill="${SDC}">${t.h}"</text>`;
+    // Height arrow: vertical on the BACK-RIGHT edge (TR2 corner) so it reads clearly
+    const hX2 = TR2[0] + 18;
+    const hY1 = TR2[1];
+    const hY2 = TR2[1] + fh;
+    const hMy2 = (hY1 + hY2) / 2;
+    sheetDims += `<line x1="${hX2.toFixed(1)}" y1="${hY1.toFixed(1)}" x2="${hX2.toFixed(1)}" y2="${hY2.toFixed(1)}" stroke="${SDC}" stroke-width="1.2"/>`
+              + `<polygon points="${hX2.toFixed(1)},${hY1.toFixed(1)} ${(hX2-SAH/2).toFixed(1)},${(hY1+SAH).toFixed(1)} ${(hX2+SAH/2).toFixed(1)},${(hY1+SAH).toFixed(1)}" fill="${SDC}"/>`
+              + `<polygon points="${hX2.toFixed(1)},${hY2.toFixed(1)} ${(hX2-SAH/2).toFixed(1)},${(hY2-SAH).toFixed(1)} ${(hX2+SAH/2).toFixed(1)},${(hY2-SAH).toFixed(1)}" fill="${SDC}"/>`
+              + `<text x="${(hX2+10).toFixed(1)}" y="${(hMy2+5).toFixed(1)}" text-anchor="start" font-size="15" font-weight="600" fill="${SDC}">${t.h}"</text>`;
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
 <rect width="${W}" height="${H}" fill="#fff"/>
@@ -1606,11 +1610,11 @@ ${boardTop}${frontFace}${topFace}${rightFace}${sheetDims}${txt}</svg>`;
     const px = Math.min(VIZ_PX_MAX, availW/maxD, availH/(totH + maxD*ell*2));
 
     const cx = VIZ_PAD + 60 + (maxD*px)/2;
-    const topLimit = VIZ_PAD + 44, botLimit = VIZ_H - VIZ_PAD - 6;
     const topRy = (tiers[tiers.length-1].d*px/2)*ell;
     const boardRy = (maxD*px/2 + 20)*ell;
-    const drawH = totH*px + topRy + boardRy;
-    const baseY = Math.min(botLimit - boardRy, topLimit + topRy + (botLimit - topLimit - drawH)/2 + totH*px);
+    // Center the full drawing (top ellipse edge → board bottom + dia arrow+label) in canvas
+    const totalDrawnH = topRy + totH*px + boardRy + 34;
+    const baseY = (VIZ_H - totalDrawnH) / 2 + topRy + totH*px;
 
     let body = '';
 
@@ -1637,24 +1641,27 @@ ${boardTop}${frontFace}${topFace}${rightFace}${sheetDims}${txt}</svg>`;
     });
 
 
-    const tx = VIZ_W - VIZ_TEXT_W - VIZ_PAD + 26, ty = VIZ_H/2;
+    const tx = VIZ_W - VIZ_TEXT_W - VIZ_PAD + 26;
+    // Top of SERVES aligns with top of highest tier (top ellipse top edge)
+    const topTierY = geo[geo.length-1].yT - (geo[geo.length-1].ry);
+    const ty = topTierY + 26;
     const lo = size.party, hi = size.wedding;
     const none = (lo == null && hi == null);
     const both = (lo != null && hi != null && lo !== hi);
     const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
     const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
-    const servesCap = none ? 'contact us for details'
-                    : both ? `party · wedding`
-                    : (hi != null ? 'wedding portions' : 'party portions');
     const priceDisplay = size.base ? `$${size.base.toLocaleString()}` : '$XX';
-    const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
+    const lineW = 230;
+    const priceX = tx + (priceDisplay.length * 26 * 0.58);
+    const designY = (ty + 112 - 26 * 0.33 + 13 * 0.35).toFixed(1);
+    const txt = `<text x="${tx}" y="${ty-26}" font-size="16" font-weight="700" fill="#000" letter-spacing="2">SERVES</text>`
+              + `<line x1="${tx}" y1="${ty-14}" x2="${tx+lineW}" y2="${ty-14}" stroke="#000" stroke-width="1"/>`
               + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
-              + `<text x="${tx}" y="${ty+48}" font-size="11" fill="#666">${servesCap}</text>`
-              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`
-              + `<text x="${tx}" y="${ty+78}" font-size="10" fill="#888" letter-spacing="1.2">BASE PRICE</text>`
-              + `<text x="${tx}" y="${ty+104}" font-size="28" font-weight="600" fill="${none?'#999':'#000'}">${priceDisplay}</text>`
-              + `<text x="${tx}" y="${ty+122}" font-size="10" fill="#666">+ custom design</text>`
-              + `<text x="${tx}" y="${ty+136}" font-size="10" fill="#666">(estimate to follow)</text>`;
+              + `<text x="${tx}" y="${ty+72}" font-size="16" font-weight="700" fill="#000" letter-spacing="2">BASE PRICE</text>`
+              + `<line x1="${tx}" y1="${ty+83}" x2="${tx+lineW}" y2="${ty+83}" stroke="#000" stroke-width="1"/>`
+              + `<text x="${tx}" y="${ty+112}" font-size="26" fill="${none?'#999':'#000'}"><tspan font-weight="600">${priceDisplay}</tspan></text>`
+              + `<text x="${priceX}" y="${designY}" font-size="13" font-weight="400" fill="#333"> + custom design</text>`
+              + `<text x="${tx}" y="${ty+128}" font-size="11" fill="#666">(estimate to follow)</text>`;
 
     // Dimension annotations — arrows with labels, original style
     const DC = '#c0392b'; // dimension colour (red)
@@ -1679,15 +1686,15 @@ ${boardTop}${frontFace}${topFace}${rightFace}${sheetDims}${txt}</svg>`;
            + `<text x="${x+10}" y="${my+5}" text-anchor="start" font-size="15" font-weight="600" fill="${DC}">${lbl}</text>`;
     }
 
-    // Bottom tier: horizontal diameter arrow below the cake base
+    // Each tier: diameter arrow just below that tier's base, height arrow on right
     const btm = geo[0];
-    const diaY = baseY + btm.ry + 18;
-    dims += hArrow(cx - btm.rx, cx + btm.rx, diaY, `${btm.t.d}"`);
-
-    // Each tier: vertical height arrow on the right side
     let arrowX = cx + btm.rx + 28;
     geo.forEach((g, i) => {
-      // stagger arrows right for multi-tier so they don't overlap
+      // Diameter arrow: sits just below this tier's base ellipse
+      // For the bottom tier use baseY + ry, for upper tiers use g.yB + g.ry
+      const diaY = (i === 0 ? baseY + g.ry : g.yB + g.ry) + 14;
+      dims += hArrow(cx - g.rx, cx + g.rx, diaY, `${g.t.d}"`);
+      // Height arrow: staggered right per tier
       const ax = arrowX + i * 24;
       dims += vArrow(ax, g.yT, g.yB, `${g.t.h}"`);
     });
