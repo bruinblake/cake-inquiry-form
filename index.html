@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -828,7 +829,7 @@
     <!-- Date alert banners -->
     <div class="date-alert too-soon" id="alertTooSoon">
       <strong>We need at least one week's notice for custom cakes!</strong>
-      Unfortunately we can't take custom orders with less than 7 days notice — but don't worry, we've got you covered!
+      Unfortunately we can't take custom orders with less than 10 days notice — but don't worry, we've got you covered!
       Our <a href="https://www.cakeforbreakfast.ca/s/shop" target="_blank">Online Cake Shop</a> has delicious options available with just 2 days notice.
     </div>
 
@@ -941,11 +942,13 @@
                 <span><span class="flavour-name">I've got a custom flavour in mind...</span><span class="flavour-desc">describe it in the notes below!</span></span>
               </label>
             </div>
+            <p style="margin-top:10px;font-size:0.85rem;color:var(--brown);">Not sure what flavour to choose? Check out our Tasting Boxes <a href="https://www.cakeforbreakfast.ca/product/cake-tasting-box-2027-preorder-/12" target="_blank" style="color:var(--brown);font-weight:600;">here</a> to see the available dates!</p>
           </div>
 
           <div class="field">
             <label>Any allergies or dietary restrictions? <span class="req">*</span></label>
-            <input type="text" name="allergies" required placeholder="e.g. gluten-free, nut allergy, vegan..." autocomplete="off">
+            <input type="text" name="allergies" required placeholder="e.g. gluten-free, nut allergy..." autocomplete="off">
+            <p style="margin-top:8px;font-size:0.82rem;color:var(--brown-pale);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.5;">Please note we cannot accommodate vegan, dairy free and egg-less at this time. All cakes are baked in a kitchen that uses wheat products, eggs, dairy, nuts and peanuts.</p>
           </div>
         </div>
 
@@ -983,10 +986,14 @@
                   -->
                   <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Heart cake icon: exact HEART_BEZ shape (cx=26,cy=22,rx=17,ry=13) -->
+                    <!-- Heart: tip at bottom (26,35), lobes at top (~y=9), widest at x=9 and x=43 at y=17.7 -->
                     <path d="M 26.0,35.0 L 27.0,34.5 L 28.1,33.8 L 29.3,33.1 L 30.6,32.3 L 31.9,31.5 L 33.2,30.5 L 34.6,29.6 L 35.9,28.6 L 37.1,27.5 L 38.3,26.4 L 39.4,25.3 L 40.4,24.2 L 41.3,23.1 L 42.0,22.0 L 42.5,20.8 L 42.8,19.7 L 43.0,18.7 L 43.0,17.7 L 42.9,16.7 L 42.7,15.7 L 42.5,14.8 L 42.1,13.9 L 41.7,13.1 L 41.1,12.3 L 40.5,11.6 L 39.8,10.9 L 39.0,10.4 L 38.1,9.9 L 37.2,9.5 L 36.2,9.2 L 35.2,9.1 L 34.1,9.0 L 33.3,9.0 L 32.5,9.1 L 31.7,9.3 L 31.0,9.5 L 30.4,9.8 L 29.8,10.1 L 29.2,10.5 L 28.7,10.9 L 28.2,11.4 L 27.8,11.9 L 27.4,12.4 L 27.0,13.0 L 26.7,13.5 L 26.5,14.2 L 26.2,14.8 L 26.0,15.4 L 25.8,14.8 L 25.5,14.2 L 25.3,13.5 L 25.0,13.0 L 24.6,12.4 L 24.2,11.9 L 23.8,11.4 L 23.3,10.9 L 22.8,10.5 L 22.2,10.1 L 21.6,9.8 L 21.0,9.5 L 20.3,9.3 L 19.5,9.1 L 18.7,9.0 L 17.9,9.0 L 16.8,9.1 L 15.8,9.2 L 14.8,9.5 L 13.9,9.9 L 13.0,10.4 L 12.2,10.9 L 11.5,11.6 L 10.9,12.3 L 10.3,13.1 L 9.9,13.9 L 9.5,14.8 L 9.3,15.7 L 9.1,16.7 L 9.0,17.7 L 9.0,18.7 L 9.2,19.7 L 9.5,20.8 L 10.0,22.0 L 10.7,23.1 L 11.6,24.2 L 12.6,25.3 L 13.7,26.4 L 14.9,27.5 L 16.1,28.6 L 17.4,29.6 L 18.8,30.5 L 20.1,31.5 L 21.4,32.3 L 22.7,33.1 L 23.9,33.8 L 25.0,34.5 L 26.0,35.0 Z"
                       stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- straight left wall from widest point down -->
                     <line x1="9" y1="17.7" x2="9" y2="38" stroke="#8b5a2b" stroke-width="1.5"/>
+                    <!-- straight right wall -->
                     <line x1="43" y1="17.7" x2="43" y2="38" stroke="#8b5a2b" stroke-width="1.5"/>
+                    <!-- elliptical base arc -->
                     <path d="M 9,38 A 17 5.5 0 0 0 43,38" stroke="#8b5a2b" stroke-width="1.5" fill="none"/>
                   </svg>
                   Heart
@@ -1007,6 +1014,36 @@
                     <path d="M39 24 L47 15 L47 33 L39 42 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
                   </svg>
                   Sheet
+                </label>
+              </div>
+
+              <!-- Big Mama -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeBigMama" value="Big Mama">
+                <label for="shapeBigMama">
+                  <!-- Wide, low round cake (Big Mama) -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 4 30 L 4 42 A 22 5 0 0 0 48 42 L 48 30" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round"/>
+                    <ellipse cx="26" cy="30" rx="22" ry="5" stroke="#8b5a2b" stroke-width="1.5"/>
+                  </svg>
+                  Big Mama
+                </label>
+              </div>
+
+              <!-- Tiered -->
+              <div class="size-option">
+                <input type="radio" name="cakeShape" id="shapeTiered" value="Tiered">
+                <label for="shapeTiered">
+                  <!-- Two-tier cake icon (taller tiers) -->
+                  <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Bottom tier -->
+                    <path d="M 4 46 L 4 30 A 22 4 0 0 1 48 30 L 48 46 A 22 4 0 0 1 4 46 Z" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                    <ellipse cx="26" cy="30" rx="22" ry="4" stroke="#8b5a2b" stroke-width="1.5"/>
+                    <!-- Top tier -->
+                    <path d="M 12 30 L 12 16 A 14 3 0 0 1 40 16 L 40 30" stroke="#8b5a2b" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+                    <ellipse cx="26" cy="16" rx="14" ry="3" stroke="#8b5a2b" stroke-width="1.5"/>
+                  </svg>
+                  Tiered
                 </label>
               </div>
 
@@ -1032,24 +1069,12 @@
             <select name="cakeSize" id="cakeSizeSelect" required disabled>
               <option value="" disabled selected>— select a shape first —</option>
             </select>
-            <!-- Hidden field so Apps Script receives portion counts alongside cakeSize -->
-            <input type="hidden" name="portions" id="portionsHidden" value="">
             <div id="sizePreview"></div>
+            <p id="shopLink" style="display:none;margin-top:10px;font-size:0.85rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:var(--brown-light);">Need a smaller size? <a href="https://www.cakeforbreakfast.ca/s/shop" target="_blank" style="color:var(--brown);font-weight:700;">Check out our online cake shop!</a></p>
           </div>
 
           <div class="field">
-            <label>How would you describe yourself? <span class="req">*</span></label>
-            <select name="describeYourself" required>
-              <option value="" disabled selected>How would you describe yourself? *</option>
-              <option>I'd be happy to give you free reign on design after explaining the feel of my event!</option>
-              <option>I don't really know what I'm after, suggestions and advice welcome!</option>
-              <option>I have a fair idea of the design I'm after, but would love some design advice.</option>
-              <option>I know exactly what design I'm after and I have pictures to show you!</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Tell us a little bit about what you're looking for... <span class="hint">(aesthetic, colour, garnishes, etc.)</span></label>
+            <label>Describe your dream cake! <span class="hint">(aesthetic, colour, garnishes, what specifics you like about your photos etc.)</span></label>
             <textarea name="aesthetic" placeholder="Dreamy buttercream, dried flowers, sage green tones..."></textarea>
           </div>
 
@@ -1064,10 +1089,6 @@
             <div class="photo-count" id="photoCount"></div>
           </div>
 
-          <div class="field">
-            <label>Anything else you'd like to ask or tell us?</label>
-            <textarea name="anythingElse" placeholder="Go for it!"></textarea>
-          </div>
         </div>
 
         <div class="card">
@@ -1077,14 +1098,16 @@
             <label>Interested in any extra fun cake garnishes? <span class="req">*</span></label>
             <div class="check-group" id="garnishGroup">
               <div class="garnish-item">
-                <label id="flowersLabel"><input type="checkbox" name="garnishes" value="Flowers" id="garnishFlowers"> Flowers (prices vary)</label>
+                <label id="flowersLabel"><input type="checkbox" name="garnishes" value="Flowers" id="garnishFlowers"> Flowers</label>
                 <div class="sub-options" id="flowersSizeOptions">
-                  <div class="sub-label">Flower size</div>
-                  <div class="radio-group">
-                    <label><input type="radio" name="flowerSize" value="Small"> Small</label>
-                    <label><input type="radio" name="flowerSize" value="Medium"> Medium</label>
-                    <label><input type="radio" name="flowerSize" value="Large"> Large</label>
-                    <label><input type="radio" name="flowerSize" value="Not sure yet"> Not sure yet</label>
+                  <div class="sub-label">Cake Flowers</div>
+                  <div class="radio-group" id="flowerArrangementGroup">
+                    <label><input type="radio" name="flowerSize" value="My florist will provide coordinating flowers for my cake"> My florist will provide coordinating flowers for my cake</label>
+                    <label><input type="radio" name="flowerSize" value="I would like a flower quote based on the colours specified above" id="flowerQuoteOption"> I would like a flower quote based on the colours specified above</label>
+                  </div>
+                  <div class="sub-options" id="flowerVarietiesField" style="display:none;margin-top:10px;">
+                    <div class="sub-label">Flower varieties <span style="font-weight:400;text-transform:none;">(optional — list any preferences)</span></div>
+                    <textarea name="flowerVarieties" placeholder="e.g. garden roses, eucalyptus..." style="margin-top:6px;"></textarea>
                   </div>
                 </div>
               </div>
@@ -1094,19 +1117,22 @@
                   <div class="sub-label">Candle type</div>
                   <div class="radio-group" id="candleTypeGroup">
                     <label><input type="radio" name="candleType" value="3 single candles ($3)"> 3 single candles ($3)</label>
-                    <label><input type="radio" name="candleType" value="Numbered candles ($2.50/ea)"> Numbered candles ($2.50/ea)</label>
-                  </div>
-                  <div id="candleNumbersField" style="display:none; margin-top:8px;">
-                    <div class="sub-label" style="margin-bottom:6px;">Which numbers? <span style="font-weight:400;text-transform:none;">(up to 3)</span></div>
-                    <div class="candle-nums">
-                      <input type="text" name="candleNum1" maxlength="2" placeholder="2" aria-label="First number">
-                      <input type="text" name="candleNum2" maxlength="2" placeholder="5" aria-label="Second number">
-                      <input type="text" name="candleNum3" maxlength="2" placeholder="" aria-label="Third number">
-                    </div>
                   </div>
                 </div>
               </div>
-              <label><input type="checkbox" name="garnishes" value="Birch Bar + Co Cake Topper"> Birch Bar + Co Cake Topper (prices vary, we can chat!)</label>
+              <div class="garnish-item">
+                <label><input type="checkbox" name="garnishes" value="Cake Topper" id="garnishTopper"> Cake Topper (made locally by Birch Bar &amp; Co)</label>
+                <div class="sub-options" id="topperOptions">
+                  <div class="field" style="margin-top:8px;">
+                    <div class="sub-label">Colour</div>
+                    <input type="text" name="topperColour" placeholder="e.g. gold, black, ivory...">
+                  </div>
+                  <div class="field" style="margin-top:8px;">
+                    <div class="sub-label">Text</div>
+                    <input type="text" name="topperText" placeholder="e.g. Happy Birthday Sara">
+                  </div>
+                </div>
+              </div>
               <label><input type="checkbox" name="garnishes" value="None"> None of the above</label>
             </div>
           </div>
@@ -1235,7 +1261,7 @@
 
   // Days closed for pickup: 0=Sun, 1=Mon, 2=Tue
   const CLOSED_DAYS = [0, 1, 2];
-  const MIN_DAYS_NOTICE = 7;
+  const MIN_DAYS_NOTICE = 10;
 
   // Set min date on the calendar to today
   const todayStr = new Date().toISOString().split('T')[0];
@@ -1327,7 +1353,67 @@
 
   // ─── Cake Size Visualizer (ported from cake_size_visualizer.html) ───────────
 
-  const VIZ_SIZES = [{"name":"Quarter Sheet (Short)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":3}]},{"name":"Quarter Sheet (Standard)","shape":"sheet","party":20,"wedding":null,"tiers":[{"s":"sheet","w":8.25,"l":11.5,"h":5}]},{"name":"Half Sheet","shape":"sheet","party":40,"wedding":null,"tiers":[{"s":"sheet","w":16.5,"l":11.5,"h":5}]},{"name":"Full Sheet","shape":"sheet","party":80,"wedding":null,"tiers":[{"s":"sheet","w":33,"l":11.5,"h":5}]},{"name":"6\" Short","shape":"round","party":8,"wedding":10,"tiers":[{"s":"round","d":6,"h":3}]},{"name":"6\" Standard","shape":"round","party":12,"wedding":15,"tiers":[{"s":"round","d":6,"h":5}]},{"name":"7\" Short","shape":"round","party":12,"wedding":16,"tiers":[{"s":"round","d":7,"h":3}]},{"name":"7\" Standard","shape":"round","party":15,"wedding":20,"tiers":[{"s":"round","d":7,"h":5}]},{"name":"8\" Short","shape":"round","party":16,"wedding":20,"tiers":[{"s":"round","d":8,"h":3}]},{"name":"8\" Standard","shape":"round","party":20,"wedding":28,"tiers":[{"s":"round","d":8,"h":5}]},{"name":"9\" Short","shape":"round","party":20,"wedding":30,"tiers":[{"s":"round","d":9,"h":3}]},{"name":"9\" Standard","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":9,"h":5}]},{"name":"10\" Short","shape":"round","party":32,"wedding":40,"tiers":[{"s":"round","d":10,"h":3}]},{"name":"12\" Short","shape":"round","party":40,"wedding":50,"tiers":[{"s":"round","d":12,"h":3}]},{"name":"10\" Standard","shape":"round","party":40,"wedding":54,"tiers":[{"s":"round","d":10,"h":5}]},{"name":"12\" Standard","shape":"round","party":54,"wedding":74,"tiers":[{"s":"round","d":12,"h":5}]},{"name":"Two Tier: Std 8in + Std 6in","shape":"round","party":32,"wedding":43,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 6in","shape":"round","party":44,"wedding":55,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Two Tier: Std 9in + Std 7in","shape":"round","party":47,"wedding":60,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 7in","shape":"round","party":55,"wedding":74,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Two Tier: Std 10in + Std 8in","shape":"round","party":60,"wedding":82,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 8in","shape":"round","party":74,"wedding":102,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Two Tier: Std 12in + Std 9in","shape":"round","party":86,"wedding":114,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5}]},{"name":"Two Tier: Std 12in + Std 10in","shape":"round","party":94,"wedding":128,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5}]},{"name":"Three Tier: Std 8in + short 7in + Std 6in","shape":"round","party":44,"wedding":59,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":7,"h":3},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 10in + Std 8in + Short 6in","shape":"round","party":68,"wedding":92,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":3}]},{"name":"Three Tier: Std 10in + Std 8in + Std 6in","shape":"round","party":72,"wedding":97,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 8in + Std 6in","shape":"round","party":86,"wedding":117,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"Three Tier: Std 12in + Std 9in + Std 7in","shape":"round","party":101,"wedding":134,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},{"name":"Three Tier: Std 12in + Short 10in + Std 8in","shape":"round","party":106,"wedding":142,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":3},{"s":"round","d":8,"h":5}]},{"name":"Three Tier: Std 12in + Std 10in + Std 8in","shape":"round","party":114,"wedding":156,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},{"name":"Four Tier: Std 12in + Std 10in + Std 8in + Std 6in","shape":"round","party":126,"wedding":171,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},{"name":"6\" Short heart","shape":"heart","party":6,"wedding":8,"tiers":[{"s":"heart","d":6,"h":3}]},{"name":"6\" heart standard","shape":"heart","party":9,"wedding":12,"tiers":[{"s":"heart","d":6,"h":5}]},{"name":"8\" Short heart","shape":"heart","party":12,"wedding":16,"tiers":[{"s":"heart","d":8,"h":3}]},{"name":"8\" heart standard","shape":"heart","party":15,"wedding":20,"tiers":[{"s":"heart","d":8,"h":5}]},{"name":"9\" Short heart","shape":"heart","party":18,"wedding":24,"tiers":[{"s":"heart","d":9,"h":3}]},{"name":"9\" Heart standard","shape":"heart","party":21,"wedding":28,"tiers":[{"s":"heart","d":9,"h":5}]},{"name":"Two Tier: Heart 9in + Heart 6in","shape":"heart","party":32,"wedding":40,"tiers":[{"s":"heart","d":9,"h":5},{"s":"heart","d":6,"h":5}]}];
+  const VIZ_SIZES = [
+    // ── Sheets ──────────────────────────────────────────────────────────────────
+    {"name":"12\"×8\" Short","shape":"sheet","party":18,"wedding":24,"base":229,"tiers":[{"s":"sheet","w":8,"l":12,"h":3}]},
+    {"name":"12\"×8\" Standard","shape":"sheet","party":28,"wedding":38,"base":349,"tiers":[{"s":"sheet","w":8,"l":12,"h":5}]},
+    {"name":"12\"×16\" Short","shape":"sheet","party":36,"wedding":48,"base":445,"tiers":[{"s":"sheet","w":12,"l":16,"h":3}]},
+    {"name":"12\"×16\" Standard","shape":"sheet","party":54,"wedding":72,"base":661,"tiers":[{"s":"sheet","w":12,"l":16,"h":5}]},
+    // ── Rounds ──────────────────────────────────────────────────────────────────
+    {"name":"6\" Standard","shape":"round","party":12,"wedding":16,"base":145,"tiers":[{"s":"round","d":6,"h":5}]},
+    {"name":"7\" Short","shape":"round","party":12,"wedding":16,"base":145,"tiers":[{"s":"round","d":7,"h":3}]},
+    {"name":"7\" Standard","shape":"round","party":16,"wedding":22,"base":189,"tiers":[{"s":"round","d":7,"h":5}]},
+    {"name":"8\" Short","shape":"round","party":14,"wedding":19,"base":167,"tiers":[{"s":"round","d":8,"h":3}]},
+    {"name":"8\" Standard","shape":"round","party":22,"wedding":30,"base":255,"tiers":[{"s":"round","d":8,"h":5}]},
+    {"name":"9\" Short","shape":"round","party":18,"wedding":24,"base":211,"tiers":[{"s":"round","d":9,"h":3}]},
+    {"name":"9\" Standard","shape":"round","party":28,"wedding":38,"base":321,"tiers":[{"s":"round","d":9,"h":5}]},
+    {"name":"10\" Short","shape":"round","party":22,"wedding":30,"base":255,"tiers":[{"s":"round","d":10,"h":3}]},
+    {"name":"10\" Standard","shape":"round","party":34,"wedding":46,"base":387,"tiers":[{"s":"round","d":10,"h":5}]},
+    {"name":"12\" Short","shape":"round","party":32,"wedding":43,"base":365,"tiers":[{"s":"round","d":12,"h":3}]},
+    {"name":"12\" Standard","shape":"round","party":48,"wedding":64,"base":541,"tiers":[{"s":"round","d":12,"h":5}]},
+    // ── Two-tier rounds (Short) ──────────────────────────────────────────────────
+    {"name":"Two Tier: Short 7in + Short 5in","shape":"round","party":16,"wedding":22,"base":202,"tiers":[{"s":"round","d":7,"h":3},{"s":"round","d":5,"h":3}]},
+    {"name":"Two Tier: Short 8in + Short 6in","shape":"round","party":22,"wedding":30,"base":273,"tiers":[{"s":"round","d":8,"h":3},{"s":"round","d":6,"h":3}]},
+    {"name":"Two Tier: Short 9in + Short 6in","shape":"round","party":26,"wedding":35,"base":320,"tiers":[{"s":"round","d":9,"h":3},{"s":"round","d":6,"h":3}]},
+    {"name":"Two Tier: Short 9in + Short 7in","shape":"round","party":28,"wedding":38,"base":343,"tiers":[{"s":"round","d":9,"h":3},{"s":"round","d":7,"h":3}]},
+    {"name":"Two Tier: Short 10in + Short 7in","shape":"round","party":32,"wedding":43,"base":391,"tiers":[{"s":"round","d":10,"h":3},{"s":"round","d":7,"h":3}]},
+    {"name":"Two Tier: Short 10in + Short 8in","shape":"round","party":36,"wedding":48,"base":438,"tiers":[{"s":"round","d":10,"h":3},{"s":"round","d":8,"h":3}]},
+    {"name":"Two Tier: Short 12in + Short 8in","shape":"round","party":46,"wedding":62,"base":556,"tiers":[{"s":"round","d":12,"h":3},{"s":"round","d":8,"h":3}]},
+    {"name":"Two Tier: Short 12in + Short 9in","shape":"round","party":50,"wedding":67,"base":603,"tiers":[{"s":"round","d":12,"h":3},{"s":"round","d":9,"h":3}]},
+    {"name":"Two Tier: Short 12in + Short 10in","shape":"round","party":54,"wedding":72,"base":650,"tiers":[{"s":"round","d":12,"h":3},{"s":"round","d":10,"h":3}]},
+    // ── Two-tier rounds (Standard) ───────────────────────────────────────────────
+    {"name":"Two Tier: 7in + 5in","shape":"round","party":26,"wedding":35,"base":320,"tiers":[{"s":"round","d":7,"h":5},{"s":"round","d":5,"h":5}]},
+    {"name":"Two Tier: 8in + 6in","shape":"round","party":34,"wedding":46,"base":414,"tiers":[{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},
+    {"name":"Two Tier: 9in + 6in","shape":"round","party":40,"wedding":54,"base":485,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":6,"h":5}]},
+    {"name":"Two Tier: 9in + 7in","shape":"round","party":44,"wedding":59,"base":532,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},
+    {"name":"Two Tier: 10in + 7in","shape":"round","party":50,"wedding":67,"base":603,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":7,"h":5}]},
+    {"name":"Two Tier: 10in + 8in","shape":"round","party":54,"wedding":72,"base":650,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},
+    {"name":"Two Tier: 12in + 8in","shape":"round","party":70,"wedding":94,"base":839,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5}]},
+    {"name":"Two Tier: 12in + 9in","shape":"round","party":76,"wedding":102,"base":910,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5}]},
+    {"name":"Two Tier: 12in + 10in","shape":"round","party":82,"wedding":110,"base":981,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5}]},
+    // ── Three-tier rounds (Short) ────────────────────────────────────────────────
+    {"name":"Three Tier: Short 9in + Short 7in + Short 5in","shape":"round","party":34,"wedding":46,"base":421,"tiers":[{"s":"round","d":9,"h":3},{"s":"round","d":7,"h":3},{"s":"round","d":5,"h":3}]},
+    {"name":"Three Tier: Short 10in + Short 8in + Short 6in","shape":"round","party":46,"wedding":62,"base":565,"tiers":[{"s":"round","d":10,"h":3},{"s":"round","d":8,"h":3},{"s":"round","d":6,"h":3}]},
+    // ── Three-tier rounds (Standard) ─────────────────────────────────────────────
+    {"name":"Three Tier: 9in + 7in + 5in","shape":"round","party":52,"wedding":70,"base":637,"tiers":[{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5},{"s":"round","d":5,"h":5}]},
+    {"name":"Three Tier: 10in + 8in + 6in","shape":"round","party":66,"wedding":88,"base":805,"tiers":[{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},
+    {"name":"Three Tier: 12in + 8in + 6in","shape":"round","party":88,"wedding":118,"base":1069,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":8,"h":5},{"s":"round","d":6,"h":5}]},
+    {"name":"Three Tier: 12in + 9in + 7in","shape":"round","party":96,"wedding":128,"base":1165,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":9,"h":5},{"s":"round","d":7,"h":5}]},
+    {"name":"Three Tier: 12in + 10in + 8in","shape":"round","party":112,"wedding":149,"base":1357,"tiers":[{"s":"round","d":12,"h":5},{"s":"round","d":10,"h":5},{"s":"round","d":8,"h":5}]},
+    // ── Big Mamas ────────────────────────────────────────────────────────────────
+    {"name":"13\" Big Mama","shape":"bigmama","party":38,"wedding":50,"base":464,"tiers":[{"s":"round","d":13,"h":3}]},
+    {"name":"16\" Big Mama","shape":"bigmama","party":57,"wedding":76,"base":696,"tiers":[{"s":"round","d":16,"h":3}]},
+    {"name":"18\" Big Mama","shape":"bigmama","party":72,"wedding":96,"base":877,"tiers":[{"s":"round","d":18,"h":3}]},
+    {"name":"24\" Big Mama","shape":"bigmama","party":128,"wedding":171,"base":1549,"tiers":[{"s":"round","d":24,"h":3}]},
+    // ── Hearts ──────────────────────────────────────────────────────────────────
+    {"name":"6\" heart standard","shape":"heart","party":9,"wedding":12,"base":0,"tiers":[{"s":"heart","d":6,"h":5}]},
+    {"name":"8\" Short heart","shape":"heart","party":10,"wedding":14,"base":123,"tiers":[{"s":"heart","d":8,"h":3}]},
+    {"name":"8\" heart standard","shape":"heart","party":16,"wedding":22,"base":189,"tiers":[{"s":"heart","d":8,"h":5}]},
+    {"name":"9\" Short heart","shape":"heart","party":14,"wedding":19,"base":167,"tiers":[{"s":"heart","d":9,"h":3}]},
+    {"name":"9\" Heart standard","shape":"heart","party":22,"wedding":30,"base":255,"tiers":[{"s":"heart","d":9,"h":5}]},
+    {"name":"Two Tier: Short Heart 9in + Short Heart 6in","shape":"heart","party":20,"wedding":27,"base":249,"tiers":[{"s":"heart","d":9,"h":3},{"s":"heart","d":6,"h":3}]},
+    {"name":"Two Tier: Heart 9in + Heart 6in","shape":"heart","party":30,"wedding":40,"base":367,"tiers":[{"s":"heart","d":9,"h":5},{"s":"heart","d":6,"h":5}]}
+  ];
 
   // Drawing engine constants
   const VIZ_PX_MAX = 26, VIZ_ELL = 0.17, VIZ_ELL_HEART = 0.46, VIZ_STROKE = 1.6;
@@ -1437,49 +1523,45 @@
     const BBR2= [BR2[0]+brd, BR2[1]+brd*0.3];
     const boardTop = `<path d="M${pt(BBL)} L${pt(BBR)} L${pt(BBR2)} L${pt([TL2[0]+brd, TL2[1]+brd*0.3])} L${pt([TL2[0]-brd, TL2[1]+brd*0.3])} Z" fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round"/>`;
 
-    // Dimension arrows helper
-    const A = (x1,y1,x2,y2) =>
-      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
-
-    // Width arrow along front bottom
-    const wmx = (BL[0]+BR[0])/2, wmy = oy + 22;
-    const widthArrow = A(BL[0], wmy, BR[0], wmy)
-      + `<line x1="${BL[0]}" y1="${oy+2}" x2="${BL[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
-      + `<line x1="${BR[0]}" y1="${oy+2}" x2="${BR[0]}" y2="${wmy+4}" stroke="#000" stroke-width=".6"/>`
-      + `<rect x="${wmx-22}" y="${wmy-9}" width="44" height="14" fill="#fff"/>`
-      + `<text x="${wmx}" y="${wmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.w}"</text>`;
-
-    // Height arrow along front-right edge
-    const hmx = TR[0] + 20, hmy = (TR[1]+BR[1])/2;
-    const heightArrow = A(hmx, TR[1], hmx, BR[1])
-      + `<line x1="${TR[0]+1}" y1="${TR[1]}" x2="${hmx+4}" y2="${TR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
-      + `<line x1="${BR[0]+1}" y1="${BR[1]}" x2="${hmx+4}" y2="${BR[1]}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`
-      + `<text x="${hmx+9}" y="${hmy+4}" font-size="12.5" fill="#000">${t.h}"</text>`;
-
-    // Length arrow along top-right edge (TR → TR2)
-    const lmx = (TR[0]+TR2[0])/2 + 6, lmy = (TR[1]+TR2[1])/2 - 10;
-    const lengthArrow = A(TR[0], TR[1], TR2[0], TR2[1])
-      + `<rect x="${lmx-18}" y="${lmy-9}" width="36" height="14" fill="#fff"/>`
-      + `<text x="${lmx}" y="${lmy+4}" text-anchor="middle" font-size="12.5" fill="#000">${t.l}"</text>`;
-
     // Serves panel (right side)
     const tx = W - VIZ_TEXT_W - VIZ_PAD + 26, ty = H/2;
     const lo = size.party;
     const big = lo ? `~${lo}` : '—';
     const fs  = 54;
+    const priceDisplay = size.base ? `$${size.base.toLocaleString()}` : '$XX';
     const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
               + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="#000">${big}</text>`
               + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">party portions</text>`
-              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`
+              + `<text x="${tx}" y="${ty+78}" font-size="10" fill="#888" letter-spacing="1.2">BASE PRICE</text>`
+              + `<text x="${tx}" y="${ty+104}" font-size="28" font-weight="600" fill="#000">${priceDisplay}</text>`
+              + `<text x="${tx}" y="${ty+122}" font-size="10" fill="#666">+ custom design</text>`
+              + `<text x="${tx}" y="${ty+136}" font-size="10" fill="#666">(estimate to follow)</text>`;
 
-    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
-    const spec  = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${t.w}" × ${t.l}" × ${t.h}"</text>`;
+    // Dimension annotations — arrows with labels, original style
+    const SDC = '#c0392b';
+    const SAH = 6;
+    let sheetDims = '';
+
+    // Width arrow: horizontal below the front face bottom edge
+    const wY = BL[1] + 20;
+    const wMx = (BL[0]+BR[0])/2;
+    sheetDims += `<line x1="${BL[0]}" y1="${wY}" x2="${BR[0]}" y2="${wY}" stroke="${SDC}" stroke-width="1.2"/>`
+              + `<polygon points="${BL[0]},${wY} ${BL[0]+SAH},${wY-SAH/2} ${BL[0]+SAH},${wY+SAH/2}" fill="${SDC}"/>`
+              + `<polygon points="${BR[0]},${wY} ${BR[0]-SAH},${wY-SAH/2} ${BR[0]-SAH},${wY+SAH/2}" fill="${SDC}"/>`
+              + `<text x="${wMx}" y="${wY+16}" text-anchor="middle" font-size="15" font-weight="600" fill="${SDC}">${t.w}"</text>`;
+
+    // Height arrow: vertical on the right side of the front face
+    const hX = BR[0] + 20;
+    const hMy = (TR[1]+BR[1])/2;
+    sheetDims += `<line x1="${hX}" y1="${TR[1]}" x2="${hX}" y2="${BR[1]}" stroke="${SDC}" stroke-width="1.2"/>`
+              + `<polygon points="${hX},${TR[1]} ${hX-SAH/2},${TR[1]+SAH} ${hX+SAH/2},${TR[1]+SAH}" fill="${SDC}"/>`
+              + `<polygon points="${hX},${BR[1]} ${hX-SAH/2},${BR[1]-SAH} ${hX+SAH/2},${BR[1]-SAH}" fill="${SDC}"/>`
+              + `<text x="${hX+10}" y="${hMy+5}" text-anchor="start" font-size="15" font-weight="600" fill="${SDC}">${t.h}"</text>`;
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
 <rect width="${W}" height="${H}" fill="#fff"/>
-<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
-${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heightArrow}${lengthArrow}${txt}</svg>`;
+${boardTop}${frontFace}${topFace}${rightFace}${sheetDims}${txt}</svg>`;
   }
 
   function drawCake(size) {
@@ -1499,9 +1581,7 @@ ${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heigh
     const drawH = totH*px + topRy + boardRy;
     const baseY = Math.min(botLimit - boardRy, topLimit + topRy + (botLimit - topLimit - drawH)/2 + totH*px);
 
-    let body = '', dims = '';
-    const A = (x1,y1,x2,y2) =>
-      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#000" stroke-width="1" marker-start="url(#va)" marker-end="url(#va)"/>`;
+    let body = '';
 
     let y = baseY;
     const geo = [];
@@ -1525,20 +1605,6 @@ ${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heigh
       }
     });
 
-    geo.forEach(g => {
-      const my = (g.yT + g.yB)/2 + g.ry*0.3;
-      dims += A(cx-g.rx+1, my, cx+g.rx-1, my);
-      dims += `<rect x="${cx-22}" y="${my-9}" width="44" height="14" fill="#fff"/>`;
-      dims += `<text x="${cx}" y="${my-1}" text-anchor="middle" font-size="12.5" font-family="inherit" fill="#000">${g.t.d}"</text>`;
-    });
-
-    const hx = cx + Math.max(...geo.map(g=>g.rx)) + 34;
-    geo.forEach(g => {
-      dims += `<line x1="${cx+g.rx}" y1="${g.yT}" x2="${hx+7}" y2="${g.yT}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
-      dims += A(hx, g.yT, hx, g.yB);
-      dims += `<text x="${hx+9}" y="${(g.yT+g.yB)/2+4}" font-size="12.5" fill="#000">${g.t.h}"</text>`;
-    });
-    dims += `<line x1="${cx+bot.rx}" y1="${baseY}" x2="${hx+7}" y2="${baseY}" stroke="#000" stroke-width=".6" stroke-dasharray="3 3"/>`;
 
     const tx = VIZ_W - VIZ_TEXT_W - VIZ_PAD + 26, ty = VIZ_H/2;
     const lo = size.party, hi = size.wedding;
@@ -1546,23 +1612,58 @@ ${title}${spec}${boardTop}${frontFace}${topFace}${rightFace}${widthArrow}${heigh
     const both = (lo != null && hi != null && lo !== hi);
     const big  = none ? '—' : (both ? `${lo}–${hi}` : String(hi != null ? hi : lo));
     const fs   = big.length > 5 ? 40 : (big.length > 3 ? 48 : 54);
-    const cap  = none ? 'contact us for details'
-               : both ? 'party to wedding portions'
-               : (hi != null ? 'wedding portions' : 'party portions');
+    const servesCap = none ? 'contact us for details'
+                    : both ? `party · wedding`
+                    : (hi != null ? 'wedding portions' : 'party portions');
+    const priceDisplay = size.base ? `$${size.base.toLocaleString()}` : '$XX';
     const txt = `<text x="${tx}" y="${ty-26}" font-size="13" fill="#000" letter-spacing="1.4">SERVES</text>`
               + `<text x="${tx}" y="${ty+26}" font-size="${fs}" font-weight="600" fill="${none?'#999':'#000'}">${big}</text>`
-              + `<text x="${tx}" y="${ty+48}" font-size="12" fill="#444">${cap}</text>`
-              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`;
+              + `<text x="${tx}" y="${ty+48}" font-size="11" fill="#666">${servesCap}</text>`
+              + `<line x1="${tx}" y1="${ty-16}" x2="${tx+120}" y2="${ty-16}" stroke="#000" stroke-width="1"/>`
+              + `<text x="${tx}" y="${ty+78}" font-size="10" fill="#888" letter-spacing="1.2">BASE PRICE</text>`
+              + `<text x="${tx}" y="${ty+104}" font-size="28" font-weight="600" fill="${none?'#999':'#000'}">${priceDisplay}</text>`
+              + `<text x="${tx}" y="${ty+122}" font-size="10" fill="#666">+ custom design</text>`
+              + `<text x="${tx}" y="${ty+136}" font-size="10" fill="#666">(estimate to follow)</text>`;
 
-    const title = `<text x="${VIZ_PAD}" y="${VIZ_PAD+4}" font-size="16" font-weight="600" fill="#000">${vizEsc(size.name)}</text>`;
-    const spec  = tiers.map(t=>`${t.d}"${(t.s||'round')==='heart'?' heart':''} × ${t.h}"`).join('  +  ');
-    const sub   = `<text x="${VIZ_PAD}" y="${VIZ_PAD+24}" font-size="12" fill="#555">${spec}</text>`;
+    // Dimension annotations — arrows with labels, original style
+    const DC = '#c0392b'; // dimension colour (red)
+    const AH = 6; // arrowhead size
+    let dims = '';
+
+    // Helper: horizontal double-arrow from (x1,y) to (x2,y) with label below
+    function hArrow(x1, x2, y, lbl) {
+      const mx = (x1+x2)/2;
+      return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${DC}" stroke-width="1.2"/>`
+           + `<polygon points="${x1},${y} ${x1+AH},${y-AH/2} ${x1+AH},${y+AH/2}" fill="${DC}"/>`
+           + `<polygon points="${x2},${y} ${x2-AH},${y-AH/2} ${x2-AH},${y+AH/2}" fill="${DC}"/>`
+           + `<text x="${mx}" y="${y+16}" text-anchor="middle" font-size="15" font-weight="600" fill="${DC}">${lbl}</text>`;
+    }
+
+    // Helper: vertical double-arrow from (x,y1) to (x,y2) with label to right
+    function vArrow(x, y1, y2, lbl) {
+      const my = (y1+y2)/2;
+      return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${DC}" stroke-width="1.2"/>`
+           + `<polygon points="${x},${y1} ${x-AH/2},${y1+AH} ${x+AH/2},${y1+AH}" fill="${DC}"/>`
+           + `<polygon points="${x},${y2} ${x-AH/2},${y2-AH} ${x+AH/2},${y2-AH}" fill="${DC}"/>`
+           + `<text x="${x+10}" y="${my+5}" text-anchor="start" font-size="15" font-weight="600" fill="${DC}">${lbl}</text>`;
+    }
+
+    // Bottom tier: horizontal diameter arrow below the cake base
+    const btm = geo[0];
+    const diaY = baseY + btm.ry + 18;
+    dims += hArrow(cx - btm.rx, cx + btm.rx, diaY, `${btm.t.d}"`);
+
+    // Each tier: vertical height arrow on the right side
+    let arrowX = cx + btm.rx + 28;
+    geo.forEach((g, i) => {
+      // stagger arrows right for multi-tier so they don't overlap
+      const ax = arrowX + i * 24;
+      dims += vArrow(ax, g.yT, g.yB, `${g.t.h}"`);
+    });
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIZ_W} ${VIZ_H}" style="width:100%;height:auto" font-family="Helvetica, Arial, sans-serif">
 <rect width="${VIZ_W}" height="${VIZ_H}" fill="#fff"/>
-<defs><marker id="va" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 1 L 10 5 L 0 9 z" fill="#000"/></marker></defs>
-${title}${sub}${body}${dims}${txt}</svg>`;
+${body}${dims}${txt}</svg>`;
   }
 
   // ─── Shape → size dropdown (uses VIZ_SIZES as source of truth) ───────────
@@ -1577,6 +1678,7 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
   const cakeSizeSelect = document.getElementById('cakeSizeSelect');
   const sizeHint       = document.getElementById('sizeHint');
   const sizePreview    = document.getElementById('sizePreview');
+  const shopLink       = document.getElementById('shopLink');
 
   // Index VIZ_SIZES by option value for fast lookup on select change
   const vizSizeByValue = {};
@@ -1593,9 +1695,10 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
     radio.addEventListener('change', function () {
       const shape = this.value;
 
-      // Clear preview
+      // Clear preview and shop link
       sizePreview.classList.remove('visible');
       sizePreview.innerHTML = '';
+      shopLink.style.display = 'none';
 
       // Rebuild dropdown
       cakeSizeSelect.innerHTML = '';
@@ -1606,11 +1709,19 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
       placeholder.textContent = '— choose a size —';
       cakeSizeSelect.appendChild(placeholder);
 
-      if (shape === 'Round' || shape === 'Heart' || shape === 'Sheet') {
-        const shapeKey = shape.toLowerCase(); // 'round', 'heart', or 'sheet'
-        VIZ_SIZES
-          .filter(s => s.shape === shapeKey)
-          .forEach(s => {
+      if (shape === 'Round' || shape === 'Heart' || shape === 'Sheet' || shape === 'Big Mama' || shape === 'Tiered') {
+        let filtered;
+        if (shape === 'Round') {
+          // Single-tier rounds only
+          filtered = VIZ_SIZES.filter(s => s.shape === 'round' && s.tiers.length === 1);
+        } else if (shape === 'Tiered') {
+          // Multi-tier rounds (2+ tiers) — includes hearts
+          filtered = VIZ_SIZES.filter(s => s.tiers.length > 1);
+        } else {
+          const shapeKey = shape === 'Big Mama' ? 'bigmama' : shape.toLowerCase();
+          filtered = VIZ_SIZES.filter(s => s.shape === shapeKey);
+        }
+        filtered.forEach(s => {
             const opt = document.createElement('option');
             opt.value       = s.name;
             opt.textContent = buildSizeLabel(s);
@@ -1640,21 +1751,12 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
     if (size) {
       sizePreview.innerHTML = drawCake(size);
       sizePreview.classList.add('visible');
-      // Populate hidden portions field for Apps Script
-      const portionsHidden = document.getElementById('portionsHidden');
-      if (portionsHidden) {
-        const lo = size.party, hi = size.wedding;
-        if (lo != null && hi != null && lo !== hi) portionsHidden.value = `${lo}–${hi} party to wedding`;
-        else if (hi != null) portionsHidden.value = `~${hi} wedding`;
-        else if (lo != null) portionsHidden.value = `~${lo} party`;
-        else portionsHidden.value = '';
-      }
     } else {
       sizePreview.classList.remove('visible');
       sizePreview.innerHTML = '';
-      const portionsHidden = document.getElementById('portionsHidden');
-      if (portionsHidden) portionsHidden.value = '';
     }
+    // Show shop link whenever a size is chosen
+    shopLink.style.display = this.value ? 'block' : 'none';
   });
 
   document.querySelectorAll('.check-group input[type="checkbox"]').forEach(input => {
@@ -1672,37 +1774,43 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
     });
   }
 
+  const garnishTopper = document.getElementById('garnishTopper');
+  const topperOptions = document.getElementById('topperOptions');
+  if (garnishTopper && topperOptions) {
+    garnishTopper.addEventListener('change', function () {
+      topperOptions.classList.toggle('visible', this.checked);
+    });
+  }
+
   const garnishCandles = document.getElementById('garnishCandles');
   const candleTypeOptions = document.getElementById('candleTypeOptions');
-  const candleNumbersField = document.getElementById('candleNumbersField');
   if (garnishCandles && candleTypeOptions) {
     garnishCandles.addEventListener('change', function () {
       candleTypeOptions.classList.toggle('visible', this.checked);
-      if (!this.checked && candleNumbersField) {
-        candleNumbersField.style.display = 'none';
+      if (!this.checked) {
         // Clear candle type selection
         document.querySelectorAll('input[name="candleType"]').forEach(r => { r.checked = false; r.closest('label').classList.remove('selected'); });
       }
     });
   }
 
-  // Show number inputs when "Numbered candles" is chosen
-  document.querySelectorAll('input[name="candleType"]').forEach(r => {
+  // Show flower varieties when "quote" option is chosen
+  document.querySelectorAll('input[name="flowerSize"]').forEach(r => {
     r.addEventListener('change', function () {
-      // Radio styling
       const group = this.closest('.radio-group');
       if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
       this.closest('label').classList.add('selected');
-      // Show number inputs only for numbered candles
-      if (candleNumbersField) {
-        candleNumbersField.style.display = (this.value === 'Numbered candles ($2.50/ea)') ? 'block' : 'none';
+      const varietiesField = document.getElementById('flowerVarietiesField');
+      if (varietiesField) {
+        varietiesField.style.display = this.value.startsWith('I would like a flower quote') ? 'block' : 'none';
       }
     });
   });
 
-  // Flower size radio styling
-  document.querySelectorAll('input[name="flowerSize"]').forEach(r => {
+  // Candle type radio styling
+  document.querySelectorAll('input[name="candleType"]').forEach(r => {
     r.addEventListener('change', function () {
+      // Radio styling
       const group = this.closest('.radio-group');
       if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
       this.closest('label').classList.add('selected');
@@ -1879,7 +1987,7 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
 
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOAUOtH6dJW78FCzZIuKsJ6fd5GTEqqTocHFnxrcdJWnZQ5hseeLLfI5d15MBpdwVZ/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby59wbLWwVEUy1aQNllSrkIK82zUmjv0BR2SfGvO_QVzu5wMzfIfDlhqKWU4rZgSaqF/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -1909,12 +2017,27 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
       phoneField.addEventListener('input', () => phoneField.style.borderColor = '', { once: true });
     }
 
+    // Email format check (must have local@domain.tld with no spaces)
+    const emailField = document.querySelector('input[name="email"]');
+    const emailVal = emailField ? emailField.value.trim() : '';
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal);
+    if (emailField && emailVal && !emailOk) {
+      valid = false;
+      emailField.style.borderColor = '#e87c7c';
+      emailField.addEventListener('input', () => emailField.style.borderColor = '', { once: true });
+    }
+
     if (!valid) {
       // Scroll to first invalid field
       const firstBad = document.querySelector('.radio-group[style*="outline"], input[style*="border-color"], select[style*="border-color"], textarea[style*="border-color"]');
       if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const isPhoneBad = phoneField.style.borderColor === 'rgb(232, 124, 124)';
-      showToast(isPhoneBad ? 'Please enter a valid 10-digit phone number.' : 'Please fill in all required fields before submitting.');
+      const isPhoneBad = phoneField && phoneField.style.borderColor === 'rgb(232, 124, 124)';
+      const isEmailBad = emailField && emailField.style.borderColor === 'rgb(232, 124, 124)';
+      showToast(
+        isEmailBad ? 'Please enter a valid email address (e.g. name@example.com).' :
+        isPhoneBad ? 'Please enter a valid 10-digit phone number.' :
+        'Please fill in all required fields before submitting.'
+      );
       return;
     }
 
@@ -1990,3 +2113,5 @@ ${title}${sub}${body}${dims}${txt}</svg>`;
 </div>
 </body>
 </html>
+
+</body></html>
