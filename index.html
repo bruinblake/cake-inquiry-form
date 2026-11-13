@@ -6,17 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<!-- Google Maps Places loaded only on non-artifact hosts; artifact CSP blocks it -->
+<!-- Google Maps Places Autocomplete -->
 <script>
 (function(){
-  // Only load Maps API if running on a real domain (not an artifact iframe)
   try {
-    if (window.top === window.self && !window.location.href.includes('claude.ai')) {
-      var s = document.createElement('script');
-      s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI&libraries=places&region=CA&language=en&callback=initAutocomplete';
-      s.async = true; s.defer = true;
-      document.head.appendChild(s);
-    }
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI&libraries=places&region=CA&language=en&callback=initAutocomplete';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
   } catch(e) {}
 })();
 </script>
@@ -931,7 +928,7 @@
                 <span><span class="flavour-name">I've got a custom flavour in mind...</span><span class="flavour-desc">describe it in the notes below!</span></span>
               </label>
             </div>
-            <p style="margin-top:10px;font-size:0.85rem;color:var(--brown);">Not sure what flavour to choose? Check out our Tasting Boxes <a href="https://www.cakeforbreakfast.ca/product/cake-tasting-box-2027-preorder-/12" target="_blank" style="color:var(--brown);font-weight:600;">here</a> to see the available dates!</p>
+            <p style="margin-top:10px;font-size:0.85rem;color:var(--brown);">Not sure what flavour to choose? Check out our Tasting Boxes <a href="https://www.cakeforbreakfast.ca/product/cake-tasting-box-2027-pre-order-/2VQHPRZBWFWYS2HYRGMW5LF3?cp=true&sa=true&sbp=false&q=false" target="_blank" style="color:var(--brown);font-weight:600;">here</a> to see the available dates!</p>
           </div>
 
           <div class="field">
@@ -2122,18 +2119,16 @@ ${body}${dims}${txt}</svg>`;
   });
 
   // --- Google Maps Places Autocomplete ---
-  // Initialises once the Maps API has loaded
   function initAutocomplete() {
     const input = document.getElementById('deliveryAddress');
     if (!input || !window.google) return;
 
     const autocomplete = new google.maps.places.Autocomplete(input, {
-      componentRestrictions: { country: 'ca' }, // Canada only
+      componentRestrictions: { country: 'ca' },
       fields: ['formatted_address'],
       types: ['address'],
     });
 
-    // When user picks a suggestion, fill the field with the full formatted address
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       if (place.formatted_address) {
@@ -2142,16 +2137,10 @@ ${body}${dims}${txt}</svg>`;
     });
   }
 
-  // Run after Maps API loads (the async defer means it may load after this script)
   if (window.google && window.google.maps) {
     initAutocomplete();
   } else {
     window.initAutocomplete = initAutocomplete;
-    // Re-point the Maps API callback if needed
-    const mapsScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (mapsScript) {
-      mapsScript.src = mapsScript.src.replace('async defer', '') + '&callback=initAutocomplete';
-    }
   }
 </script>
 
