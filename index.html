@@ -883,29 +883,6 @@
 
         <!-- Rest of this card is blocked when date is invalid -->
         <div id="dateGatedFields">
-          <div class="field">
-            <label>Event time <span class="req">*</span> <span class="hint">Approximate is fine</span></label>
-            <select name="eventTime" required>
-              <option value="" disabled selected>— select a time —</option>
-              <option>6:00 AM</option>
-              <option>7:00 AM</option>
-              <option>8:00 AM</option>
-              <option>9:00 AM</option>
-              <option>10:00 AM</option>
-              <option>11:00 AM</option>
-              <option>12:00 PM</option>
-              <option>1:00 PM</option>
-              <option>2:00 PM</option>
-              <option>3:00 PM</option>
-              <option>4:00 PM</option>
-              <option>5:00 PM</option>
-              <option>6:00 PM</option>
-              <option>7:00 PM</option>
-              <option>8:00 PM</option>
-              <option>9:00 PM</option>
-              <option>10:00 PM</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -1184,11 +1161,19 @@
               <label><input type="radio" name="pickupTiming" value="The day before"> The day before</label>
               <label><input type="radio" name="pickupTiming" value="Other"> Other</label>
             </div>
+            <input type="text" id="pickupTimingOther" name="pickupTimingOther" value="Other"
+              placeholder="Describe your timing..."
+              style="display:none;margin-top:10px;width:100%;padding:10px 14px;border:1.5px solid var(--brown-pale);border-radius:var(--radius);font-family:inherit;font-size:0.97rem;background:#fff;color:var(--text)">
           </div>
 
           <div class="field" id="deliveryAddressField" style="display:none">
             <label>Address for delivery quote <span class="hint">Start typing — verified addresses will appear</span></label>
-            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
+            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Venue Lane, Kelowna, BC" autocomplete="off">
+          </div>
+
+          <div class="field" id="deliveryTimeField" style="display:none">
+            <label>Preferred delivery time <span class="hint">Approximate is fine</span></label>
+            <input type="text" name="deliveryTime" id="deliveryTime" placeholder="between 2–4pm or TBC" autocomplete="off">
           </div>
 
           <div id="deliveryContactFields" style="display:none">
@@ -1855,20 +1840,29 @@ ${body}${dims}${txt}</svg>`;
     });
   });
 
-  // Pickup timing radio styling
+  // Pickup timing radio styling + "Other" text reveal
+  const pickupTimingOtherInput = document.getElementById('pickupTimingOther');
   document.querySelectorAll('input[name="pickupTiming"]').forEach(r => {
     r.addEventListener('change', function () {
       const group = this.closest('.radio-group');
       if (group) group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
       this.closest('label').classList.add('selected');
+      if (this.value === 'Other') {
+        pickupTimingOtherInput.style.display = 'block';
+        pickupTimingOtherInput.focus();
+        pickupTimingOtherInput.select();
+      } else {
+        pickupTimingOtherInput.style.display = 'none';
+      }
     });
   });
 
-  // --- Show/hide delivery address + contact fields ---
+  // --- Show/hide delivery address + time + contact fields ---
   document.querySelectorAll('input[name="pickup"]').forEach(r => {
     r.addEventListener('change', function () {
       const isDelivery = this.value === 'Delivery';
       document.getElementById('deliveryAddressField').style.display  = isDelivery ? 'block' : 'none';
+      document.getElementById('deliveryTimeField').style.display     = isDelivery ? 'block' : 'none';
       document.getElementById('deliveryContactFields').style.display = isDelivery ? 'block' : 'none';
     });
   });
@@ -2025,7 +2019,7 @@ ${body}${dims}${txt}</svg>`;
 
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5c6MXymszg5wN3pENC1pN0rIdQI9qzzc0UpdcXq26Bx9BwH4wYBk0NcLDlBCZj9du/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvcBIk8DrDsgTP3_sJvOa-j4jd-ARTxWGLEiFMMdkQ0Pffrt-_hMEyiybhz6WG6rQJ/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -2090,6 +2084,13 @@ ${body}${dims}${txt}</svg>`;
       // skip file inputs — handled separately as base64
       if (typeof val === 'string') payload[key] = val;
     });
+
+    // If "Other" pickup timing selected, replace with the typed text
+    if (payload.pickupTiming === 'Other') {
+      const otherVal = (document.getElementById('pickupTimingOther').value || '').trim();
+      payload.pickupTiming = otherVal || 'Other';
+    }
+    delete payload.pickupTimingOther; // don't send the extra field
 
     // Convert each photo to base64
     await Promise.all(uploadedFiles.map((file, i) => new Promise(resolve => {
