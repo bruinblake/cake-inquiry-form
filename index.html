@@ -6,16 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<!-- Google Maps Places API (New) -->
-<script>
-(function(){
-  try {
-    var s = document.createElement('script');
-    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI&libraries=places&v=beta&region=CA&language=en&callback=initAutocomplete';
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
-  } catch(e) {}
-})();
+<!-- Google Maps Places API (New) — loaded as ES module -->
+<script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries","places");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("key","AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI");e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({v:"weekly",region:"CA",language:"en"});
 </script>
 <style>
   :root {
@@ -2118,30 +2110,47 @@ ${body}${dims}${txt}</svg>`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // --- Google Maps Places Autocomplete ---
-  function initAutocomplete() {
-    const input = document.getElementById('deliveryAddress');
-    if (!input || !window.google) return;
+  // --- Google Maps PlaceAutocompleteElement (Places API New) ---
+  async function initAutocomplete() {
+    const wrapper = document.getElementById('deliveryAddressField');
+    const hiddenInput = document.getElementById('deliveryAddress');
+    if (!wrapper || !hiddenInput) return;
 
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-      componentRestrictions: { country: 'ca' },
-      fields: ['formatted_address'],
-      types: ['address'],
-    });
+    try {
+      const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
 
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (place.formatted_address) {
-        input.value = place.formatted_address;
-      }
-    });
+      // Create the new web component
+      const pac = new PlaceAutocompleteElement({
+        componentRestrictions: { country: 'ca' },
+        types: ['address'],
+      });
+
+      // Style it to match the form
+      pac.style.cssText = 'width:100%;display:block;';
+      pac.setAttribute('placeholder', '123 Venue Lane, Kelowna, BC');
+
+      // Replace the hidden input visually — keep hidden input for form submission
+      hiddenInput.style.display = 'none';
+      wrapper.appendChild(pac);
+
+      // When a place is selected, write formatted address to hidden input
+      pac.addEventListener('gmp-placeselect', async (e) => {
+        const place = e.placePrediction.toPlace();
+        await place.fetchFields({ fields: ['formattedAddress'] });
+        hiddenInput.value = place.formattedAddress || '';
+        // Also update the visible element's value
+        pac.value = hiddenInput.value;
+      });
+    } catch(e) {
+      // Fallback: show the plain text input if PlaceAutocompleteElement fails
+      console.warn('PlaceAutocompleteElement unavailable:', e);
+      hiddenInput.style.display = '';
+    }
   }
 
-  if (window.google && window.google.maps) {
-    initAutocomplete();
-  } else {
-    window.initAutocomplete = initAutocomplete;
-  }
+  google.maps.importLibrary("places").then(initAutocomplete).catch(e => {
+    console.warn('Maps failed to load:', e);
+  });
 </script>
 
 <div id="toast" role="alert" aria-live="assertive">
