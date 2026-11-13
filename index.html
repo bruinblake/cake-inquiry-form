@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wedding Cakes & Custom Cakes — Cake For Breakfast</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<!-- Google Maps Places Autocomplete -->
+<!-- Google Maps Places API (New) -->
 <script>
 (function(){
   try {
     var s = document.createElement('script');
-    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI&libraries=places&region=CA&language=en&callback=initAutocomplete';
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAkMSUs8cFZdWE2zm6r54xboDoBzKpxvaI&libraries=places&v=beta&region=CA&language=en&callback=initAutocomplete';
     s.async = true; s.defer = true;
     document.head.appendChild(s);
   } catch(e) {}
