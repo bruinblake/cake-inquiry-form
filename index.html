@@ -2072,6 +2072,12 @@ ${body}${dims}${txt}</svg>`;
       if (typeof val === 'string') payload[key] = val;
     });
 
+    // If delivery address is empty (user typed but didn't select a suggestion), grab pac text
+    if (!payload.deliveryAddress) {
+      const pac = document.querySelector('#deliveryAddressField gmp-place-autocomplete, #deliveryAddressField input[type="text"]:not([id="deliveryAddress"])');
+      if (pac && pac.value) payload.deliveryAddress = pac.value;
+    }
+
     // If "Other" pickup timing selected, replace with the typed text
     if (payload.pickupTiming === 'Other') {
       const otherVal = (document.getElementById('pickupTimingOther').value || '').trim();
@@ -2135,9 +2141,10 @@ ${body}${dims}${txt}</svg>`;
       pac.addEventListener('gmp-placeselect', async (e) => {
         const place = e.placePrediction.toPlace();
         await place.fetchFields({ fields: ['formattedAddress'] });
-        hiddenInput.value = place.formattedAddress || '';
-        // Also update the visible element's value
-        pac.value = hiddenInput.value;
+        hiddenInput.value = place.formattedAddress
+          || e.placePrediction.text?.toString()
+          || pac.value
+          || '';
       });
     } catch(e) {
       // Fallback: show the plain text input if PlaceAutocompleteElement fails
