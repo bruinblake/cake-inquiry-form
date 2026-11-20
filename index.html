@@ -1,5 +1,5 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
+<!-- Cake For Breakfast inquiry form — v5: works with Apps Script v4 — bot trap, photo compression, multi-select fix, required checkbox groups -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -286,10 +286,42 @@
     box-shadow: none;
   }
 
+  /* Sending state (overrides the grey disabled look) */
+  button[type="submit"].is-sending,
+  button[type="submit"].is-sending:disabled {
+    background: var(--brown-light);
+    cursor: wait;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 18px rgba(92,51,23,0.25);
+  }
+
+  .btn-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(253,242,195,0.35);
+    border-top-color: var(--cream);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   .submit-note {
     font-size: 0.82rem;
     color: var(--brown-pale);
     margin-top: 12px;
+  }
+
+  .submit-note.sending {
+    color: var(--brown);
+    font-weight: 600;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
   }
 
   /* --- Success state --- */
@@ -840,6 +872,12 @@
 
     <form id="cakeForm" novalidate>
 
+      <!-- Spam trap: hidden from people, bots fill it in. Leave empty. -->
+      <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
       <!-- CONTACT -->
       <div class="card">
         <div class="card-title">Your Details</div>
@@ -1226,7 +1264,7 @@
 
         <div class="submit-wrap">
           <button type="submit" id="submitBtn">Send My Inquiry</button>
-          <p class="submit-note">We'll be in touch within 1 week!</p>
+          <p class="submit-note" id="submitNote" aria-live="polite">We'll be in touch within 1 week!</p>
         </div>
 
       </div><!-- /mainForm -->
@@ -1235,8 +1273,8 @@
 </div><!-- /form-wrap -->
 
 <script>
-  const GOOGLE_FORM_ACTION = 'https://script.google.com/macros/s/AKfycbynytaITbkGJaQ3gngdjfK_gnMV6boTwPCjcJ7lyKXtNIM4FFlhMybikBk0k9hEh8mF/exec';
-  // Replace above with your Google Form POST URL (see instructions in the guide)
+  // Time the page loaded — sent with the inquiry so the server can spot instant bot submissions
+  const FORM_LOADED_AT = Date.now();
 
   const eventDateInput = document.getElementById('eventDate');
   const alertTooSoon   = document.getElementById('alertTooSoon');
@@ -1334,6 +1372,7 @@
       const group = this.closest('.radio-group');
       group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
       this.closest('label').classList.add('selected');
+      group.style.outline = '';
     });
   });
 
@@ -2006,7 +2045,48 @@ ${body}${dims}${txt}</svg>`;
 
   // ---- SUBMIT → Apps Script Web App ----
   // Paste your deployed Web App URL here after following the setup guide
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJ7Omc96ghXzJkz5zcgo2FOFkoe3uWEWtCv0mFjRhPVxVgJpgKV4Zcfe8-jMiQaPI-/exec';
+  function readAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = ev => resolve(ev.target.result);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Resize to fit maxDim and re-encode as JPEG. Resolves null if the browser
+  // can't decode the image or the result wouldn't be smaller.
+  function compressImage(file, maxDim = 2000, quality = 0.85) {
+    return new Promise(resolve => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        try {
+          const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.round(img.naturalWidth * scale), h = Math.round(img.naturalHeight * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff';            // transparent PNGs → white, not black
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          if (dataUrl.length > file.size * 1.37) return resolve(null); // already small — keep original
+          resolve({ dataUrl, name: file.name.replace(/\.[^.]+$/, '') + '.jpg' });
+        } catch (err) { resolve(null); }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+      img.src = url;
+    });
+  }
+
+  function warnOnLeave(e) { e.preventDefault(); e.returnValue = ''; }
+
+  // Give up waiting after this long and let the customer retry
+  const SUBMIT_TIMEOUT_MS = 90000;
+
+  const SCRIPT_URL ='https://script.google.com/macros/s/AKfycbyJ7Omc96ghXzJkz5zcgo2FOFkoe3uWEWtCv0mFjRhPVxVgJpgKV4Zcfe8-jMiQaPI-/exec';
 
   document.getElementById('cakeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -2025,6 +2105,16 @@ ${body}${dims}${txt}</svg>`;
         valid = false;
         field.style.borderColor = '#e87c7c';
         field.addEventListener('input', () => field.style.borderColor = '', { once: true });
+      }
+    });
+
+    // Starred checkbox groups need at least one box ticked
+    ['garnishGroup', 'heardGroup'].forEach(id => {
+      const grp = document.getElementById(id);
+      if (grp && !grp.querySelector('input[type="checkbox"]:checked')) {
+        valid = false;
+        grp.style.outline = '2px solid #e87c7c';
+        grp.addEventListener('change', () => grp.style.outline = '', { once: true });
       }
     });
 
@@ -2048,7 +2138,7 @@ ${body}${dims}${txt}</svg>`;
 
     if (!valid) {
       // Scroll to first invalid field
-      const firstBad = document.querySelector('.radio-group[style*="outline"], input[style*="border-color"], select[style*="border-color"], textarea[style*="border-color"]');
+      const firstBad = document.querySelector('.radio-group[style*="outline"], .check-group[style*="outline"], input[style*="border-color"], select[style*="border-color"], textarea[style*="border-color"]');
       if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
       const isPhoneBad = phoneField && phoneField.style.borderColor === 'rgb(232, 124, 124)';
       const isEmailBad = emailField && emailField.style.borderColor === 'rgb(232, 124, 124)';
@@ -2060,17 +2150,42 @@ ${body}${dims}${txt}</svg>`;
       return;
     }
 
-    // Show sending state
+    // Show sending state — can take up to ~1 minute with photos
+    const submitNote = document.getElementById('submitNote');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending…';
+    submitBtn.classList.add('is-sending');
+    submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span><span id="btnLabel">Sending your inquiry…</span>';
+    submitNote.classList.add('sending');
+    submitNote.style.color = ''; // clear red from a previous failed attempt
+    submitNote.textContent = 'This can take up to a minute. Please keep this page open until you see the confirmation.';
+
+    // Rotate the button label so it doesn't look frozen
+    const stages = [
+      [8000,  uploadedFiles.length ? 'Uploading your photos…' : 'Still sending…'],
+      [20000, 'Still working — almost there…'],
+      [40000, 'Hang tight, just finishing up…'],
+    ];
+    const stageTimers = stages.map(([ms, txt]) => setTimeout(() => {
+      const lbl = document.getElementById('btnLabel');
+      if (lbl) lbl.textContent = txt;
+    }, ms));
+
+    // Warn if they try to close/leave mid-send
+    window.addEventListener('beforeunload', warnOnLeave);
 
     // Build payload as plain object from form fields
     const formEl = this;
     const payload = {};
     new FormData(formEl).forEach((val, key) => {
       // skip file inputs — handled separately as base64
-      if (typeof val === 'string') payload[key] = val;
+      if (typeof val !== 'string') return;
+      // Checkbox groups (garnishes, heardAbout) send several values with the same
+      // name — join them instead of keeping only the last one
+      payload[key] = (key in payload && payload[key]) ? payload[key] + ', ' + val : val;
     });
+    // Apps Script expects "heardAboutUs"
+    if ('heardAbout' in payload) { payload.heardAboutUs = payload.heardAbout; delete payload.heardAbout; }
+    payload._elapsed = Date.now() - FORM_LOADED_AT;
 
     // If delivery address is empty (user typed but didn't select a suggestion), grab pac text
     if (!payload.deliveryAddress) {
@@ -2085,31 +2200,75 @@ ${body}${dims}${txt}</svg>`;
     }
     delete payload.pickupTimingOther; // don't send the extra field
 
-    // Convert each photo to base64
-    await Promise.all(uploadedFiles.map((file, i) => new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = ev => {
-        payload[`photo_${i+1}_data`] = ev.target.result;
+    // Shrink each photo (max 2000px JPEG) before sending — phone photos are often
+    // 3–8 MB, this cuts upload time a lot and strips location data from the file.
+    // Falls back to the original if the browser can't read it (e.g. HEIC on Chrome).
+    await Promise.all(uploadedFiles.map(async (file, i) => {
+      const small = await compressImage(file);
+      if (small) {
+        payload[`photo_${i+1}_data`] = small.dataUrl;
+        payload[`photo_${i+1}_type`] = 'image/jpeg';
+        payload[`photo_${i+1}_name`] = small.name;
+      } else {
+        payload[`photo_${i+1}_data`] = await readAsDataUrl(file);
         payload[`photo_${i+1}_type`] = file.type;
         payload[`photo_${i+1}_name`] = file.name;
-        resolve();
-      };
-      reader.readAsDataURL(file);
-    })));
+      }
+    }));
 
+    // Send as JSON (text/plain body → no CORS preflight). Apps Script doPost reads
+    // e.postData.contents and must reply with {"ok":true} for this to count as sent.
+    let sendOk = false;
+    let failReason = '';
+    let clientEmailFailed = false;
+    const controller = new AbortController();
+    const abortTimer = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
     try {
-      // Send as JSON — Apps Script doPost reads e.postData.contents
-      await fetch(SCRIPT_URL, {
+      const res = await fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify(payload),
-        mode: 'no-cors'
+        signal: controller.signal
       });
+      const text = await res.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch (_) { /* HTML error page etc. */ }
+      if (res.ok && data && data.status === 'ok') {
+        sendOk = true;
+        clientEmailFailed = !!data.clientEmailFailed;
+      } else {
+        failReason = (data && data.message) ? data.message : `Unexpected response (HTTP ${res.status})`;
+      }
     } catch (err) {
-      console.log('Submitted:', err.message);
+      failReason = err.name === 'AbortError' ? 'Timed out' : err.message;
+    }
+    clearTimeout(abortTimer);
+
+    stageTimers.forEach(clearTimeout);
+    window.removeEventListener('beforeunload', warnOnLeave);
+
+    if (!sendOk) {
+      console.warn('Inquiry submit failed:', failReason);
+      // Restore the button so they can try again — their answers and photos are still in the form
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('is-sending');
+      submitBtn.textContent = 'Try Sending Again';
+      submitNote.textContent = failReason === 'Timed out'
+        ? 'That took longer than expected and we couldn’t confirm it went through. Please try again in a moment — or if it keeps happening, email cake@cakeforbreakfast.ca or call 250-469-4172.'
+        : 'Something went wrong and your inquiry didn’t send. Your answers are still here — please try again, or if it keeps happening, email cake@cakeforbreakfast.ca or call 250-469-4172.';
+      submitNote.style.color = '#7a0000';
+      showToast('Your inquiry didn’t send — please try again.');
+      return;
     }
 
     // Show success
     document.getElementById('formBody').classList.add('hidden');
+    if (clientEmailFailed) {
+      // Order is saved — just couldn't send their confirmation email
+      const note = document.createElement('p');
+      note.style.cssText = 'margin-top:16px;color:#7a4a00;font-weight:600;';
+      note.textContent = `Heads up: we couldn’t send a confirmation email to ${payload.email || 'your address'}. If that address has a typo, please email cake@cakeforbreakfast.ca so we can reach you.`;
+      document.getElementById('successScreen').querySelector('p').after(note);
+    }
     document.getElementById('successScreen').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
@@ -2138,14 +2297,21 @@ ${body}${dims}${txt}</svg>`;
       wrapper.appendChild(pac);
 
       // When a place is selected, write formatted address to hidden input
-      pac.addEventListener('gmp-placeselect', async (e) => {
-        const place = e.placePrediction.toPlace();
-        await place.fetchFields({ fields: ['formattedAddress'] });
-        hiddenInput.value = place.formattedAddress
-          || e.placePrediction.text?.toString()
-          || pac.value
-          || '';
-      });
+      // Google renamed this event ('gmp-placeselect' → 'gmp-select'); handle both
+      const onPick = async (e) => {
+        try {
+          const place = e.placePrediction ? e.placePrediction.toPlace() : e.place;
+          if (!place) return;
+          await place.fetchFields({ fields: ['formattedAddress'] });
+          hiddenInput.value = place.formattedAddress
+            || (e.placePrediction && e.placePrediction.text ? e.placePrediction.text.toString() : '')
+            || '';
+        } catch (err) {
+          console.warn('Address lookup failed:', err);
+        }
+      };
+      pac.addEventListener('gmp-select', onPick);
+      pac.addEventListener('gmp-placeselect', onPick);
     } catch(e) {
       // Fallback: show the plain text input if PlaceAutocompleteElement fails
       console.warn('PlaceAutocompleteElement unavailable:', e);
@@ -2164,5 +2330,3 @@ ${body}${dims}${txt}</svg>`;
 </div>
 </body>
 </html>
-
-</body></html>
